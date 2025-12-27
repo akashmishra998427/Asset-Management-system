@@ -1,0 +1,1498 @@
+﻿@{
+	ViewData["Title"] = "Assets Transfer";
+	Layout = "~/Views/Shared/ItLayout.cshtml";
+}
+
+<style>
+	.select2-container .select2-selection--single {
+		height: 35px !important;
+		font-size: 15px !important;
+		padding: 0.375rem 0.75rem !important;
+		border: 1px solid #ccc !important;
+		border-radius: 0.25rem !important;
+		padding: 10px;
+	}
+	.select2-container--default .select2-selection--single .select2-selection__rendered {
+		line-height: 1.5 !important;
+	}
+	#ddlMenuTransfer {
+		max-height: 200px;
+		overflow-y: auto;
+		width: 100%;
+		border: 1px solid #ccc;
+	}
+	#ddlPremisesSelect {
+		max-height: 200px;
+		overflow-y: auto;
+		width: 100%;
+		border: 1px solid #ccc;
+	}
+	#ddlTransferredSelect {
+		max-height: 200px;
+		overflow-y: auto;
+		width: 100%;
+		border: 1px solid #ccc;
+	}
+	#ddlDepartmentSelect {
+		max-height: 200px;
+		overflow-y: auto;
+		width: 100%;
+		border: 1px solid #ccc;
+	}
+	#ddlReportingSelect {
+		max-height: 200px;
+		overflow-y: auto;
+		width: 100%;
+		border: 1px solid #ccc;
+	}
+	#ddlMenuTransfer{
+		position: absolute;
+		inset: 0px auto auto 0px;
+		margin: 0px;
+		transform: translate(2px, 40px) !important;
+	}
+	#ddlPremisesSelect {
+		position: absolute;
+		inset: 0px auto auto 0px;
+		margin: 0px;
+		transform: translate(2px, 40px) !important;
+	}
+	#ddlDepartmentSelect {
+		position: absolute;
+		inset: 0px auto auto 0px;
+		margin: 0px;
+		transform: translate(2px, 40px) !important;
+	}
+	.dropdown-item{
+		width: 0% !important;
+	}
+	.Bgcolour{
+		/* background-color:white; */
+		background-color: #f9f9f9;
+		border-radius:15px;
+		/* margin-top:5%; */
+	}
+	.modal-header .btn-close {
+		padding: calc(var(--bs-modal-header-padding-y) * .5) calc(var(--bs-modal-header-padding-x) * .5);
+		margin: 0px !important;
+	}
+</style>
+<link rel="stylesheet" href="~/jquery/jQueryUi.css">
+<script src="~/jquery/jQueryUi.js"></script>
+<div class="overflow-hidden position-relative">
+	<div class="ps-0 justify-content-center align-content-center">
+		<div class="Bgcolour" style="min-height:800px; max-width:1300px">
+			<div class="text-black">
+				<div class="row text-center">
+					<h4 class="mt-2 fw-bold">Assets Transfer</h4>
+				</div>
+			</div>
+			<div class="">
+				<div class="container-fluid">
+					<div id="DV_SoftData" class="row d-flex gap-3 align-content-center justify-content-center">
+						<input type="hidden" id="hdnLocation" />
+						<input type="hidden" id="HEngineerName" />
+						<input type="hidden" id="hdnEmpCode"/>
+						<div class="col-md-3 Bgcolour">
+							<div class="mb-3">
+								<div class="text-black">
+									<strong>Transfer From</strong>
+								</div>
+								<div class="">
+									<div class="mb-3 mt-4">
+										<label class="form-label fw-bold" for="chkHistory">History:</label>
+										<input type="checkbox" id="chkHistory" class="form-check-input" onchange="BindHistory()" style="margin-left:15px; margin-top:8px"/>
+									</div>
+									<div class="mb-3" id="transferFromDropdown">
+										<label class="form-label fw-bold" for="ddlTransfer">Transferred From:</label>
+										<div class="input-group">
+											<input type="text" class="form-control dropdown-toggle" data-bs-toggle="dropdown" id="ddlTransfer" placeholder="Select Transfer From" style="border-right:none" autocomplete="off">
+											<button type="button" class="btn border dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" style="border-left:none;background-color:#f8f9fa"></button>
+											<ul class="dropdown-menu" id="ddlMenuTransfer"></ul>
+										</div>
+									</div>
+									<div class="chkAllAsset">
+										<div class="mb-3 d-flex flex-column gap-2" id="bindAssetDetails" style="max-height: 400px; max-width:360px; overflow-y: auto; margin-top:3%;">
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-8 Bgcolour">
+							<div class="mb-3">
+								<div class="text-black d-flex justify-content-between">
+									<div><strong>Transfer To</strong></div>
+									<div>
+										<div class="btn btn-success" id="btnRefresh" onclick="RefreshButtoClick()">
+											<i class="fa-solid fa-arrows-rotate"></i> Refresh
+										</div>
+										<div class="btn btn-primary" id="btnTransfer" onclick="transferAsset()">
+											<i class="fa-solid fa-money-bill-transfer"></i> Transfer
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class=" ">
+										<label class="form-label me-2 fw-bold" for="chkEdp">EDP Stock</label>
+										<input id="chkEdp" type="checkbox" class="form-check-input" onchange="EdpStock()" />
+									</div>
+ 									<div class="col-md-4 ">
+										<label class="form-label fw-bold" for="ddlPremises">Installed Premises:</label>
+										<div class="input-group">
+											<input type="text" class="form-control dropdown-toggle" data-bs-toggle="dropdown" id="ddlPremises" placeholder="Select Premises" style="border-right:none">
+											<button type="button" class="btn dropdown-toggle border" data-bs-toggle="dropdown" aria-expanded="false" style="border-left:none;background-color:#f8f9fa"></button>
+											<ul class="dropdown-menu" id="ddlPremisesSelect"></ul>
+										</div>
+									</div>
+									 
+									<div style="width: 33.33%; margin-bottom: 16px;">
+										<label for="ddlTransferred" style="display:block; font-weight: bold; font-family: Arial, sans-serif; margin-bottom: 8px;">Transferred To:</label>
+										<div style="display: flex;">
+											<input type="text" id="ddlTransferred" placeholder="Select Transferred To" style="flex: 1; padding: 10px; font-size: 14px; border: 1px solid #ccc; border-right: none; border-top-left-radius: 4px; border-bottom-left-radius: 4px; font-family: Arial, sans-serif;">
+											<button type="button" data-bs-toggle="modal" data-bs-target="#EmployeeMaster" aria-expanded="false" style="padding: 10px 12px; border: 1px solid #ccc; border-left: none; border-top-right-radius: 4px; border-bottom-right-radius: 4px; background-color: #f8f9fa; cursor: pointer; font-size: 10px; color: gray">
+												▼
+											</button>
+										</div>
+									</div>
+
+									<div class="col-md-4">
+										<label class="form-label fw-bold" for="Login">Login Id:</label>
+										<input type="text" id="Login" class="form-control" placeholder="Enter Login ID" />
+									</div>
+ 
+									<div class="col-md-4">
+										<label class="form-label fw-bold" for="ddlDepartment">Department:</label>
+										<div class="input-group">
+											<input type="text" class="form-control dropdown-toggle" data-bs-toggle="dropdown" id="ddlDepartment" placeholder="Select Department" style="border-right:none">
+											<button type="button" class="btn dropdown-toggle border" data-bs-toggle="dropdown" aria-expanded="false" style="border-left:none;background-color:#f8f9fa"></button>
+											<ul class="dropdown-menu" id="ddlDepartmentSelect"></ul>
+										</div>
+									</div>
+									<div class="col-md-4">
+										<label class="form-label fw-bold" for="Email">Email Id:</label>
+										<input type="text" id="Email" class="form-control" placeholder="Enter Email ID" />
+									</div>
+									<div class="col-md-4">
+										<label class="form-label fw-bold" for="GIMSId">GIMS Id:</label>
+										<input type="text" id="GIMSId" class="form-control" placeholder="Enter GIMS ID" />
+									</div>
+ 
+									<div class="col-md-4">
+										<label class="form-label fw-bold" for="VFMID">VFM Id:</label>
+										<input type="text" id="VFMID" class="form-control" placeholder="Enter VFM ID" />
+									</div>
+									<div class="col-md-4">
+										<label class="form-label fw-bold" for="PadsId">Pads Id:</label>
+										<input type="text" id="PadsId" class="form-control" placeholder="Enter Pads ID" />
+									</div>
+									<div class="col-md-4">
+										<label class="form-label fw-bold" for="ddlReporting">Reporting To:</label>
+										<div class="input-group">
+											<input type="text" class="form-control dropdown-toggle" data-bs-toggle="dropdown" id="ddlReporting" placeholder="Select Reporting To" style="border-right:none">
+											<button type="button" class="btn dropdown-toggle border" data-bs-toggle="dropdown" aria-expanded="false" style="border-left:none;background-color:#f8f9fa"></button>
+											<ul class="dropdown-menu" id="ddlReportingSelect"></ul>
+										</div>
+									</div>
+ 
+									<div class="col-md-4">
+										<label class="form-label fw-bold" for="Mobile">Mobile No:</label>
+										<input type="text" id="Mobile" class="form-control" placeholder="Enter Mobile No" />
+									</div>
+									<div class="col-md-4">
+										<label class="form-label fw-bold" for="IPAddress">IP Address:</label>
+										<input type="text" id="IPAddress" class="form-control" placeholder="Enter IP Address" />
+									</div>
+									<div class="col-md-4">
+										<label class="form-label fw-bold" for="ContactExt">Contact Ext. No.:</label>
+										<input type="text" id="ContactExt" class="form-control" placeholder="Enter Extension no.." />
+									</div>
+ 
+									<div class="col-md-4">
+										<label class="form-label fw-bold" for="InstalledDate">Installed Date:</label>
+										<input type="date" id="InstalledDate" class="form-control" placeholder="Select Date" />
+									</div>
+									<div style="width: 66.66%; margin-bottom: 16px;">
+										<label for="txtRemark" style="display: block; font-weight: bold; margin-bottom: 8px; font-family: Arial, sans-serif;">Remark:</label>
+										<textarea id="txtRemark" placeholder="Remark.." style="width: 100%; height: 47px; padding: 10px; font-size: 14px; font-family: Arial, sans-serif; border: 1px solid #ccc; border-radius: 4px; resize: vertical;"></textarea>
+									</div>
+ 
+									<div class="checkbox" style="width: 60px; display: none">
+										<label>
+											<input type="checkbox" id="ChkScrapTransfer" value="Scrap" /><i class="input-helper"></i>Scrap
+										</label>
+									</div>
+ 
+									<div class="col-md-5">
+										<h4 id="headingAld">Already Allotted Assets to User</h4>
+									</div>
+									<div class="col-md-3"></div>
+									<div class="col-md-4">
+										<div class="row mb-1 fw-bold" id="aldDept"></div>
+										<div class="row fw-bold" id="aldDesign"></div>
+									</div>
+ 
+									<div class="" id="AssetsNAME" style="width:300px"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="AssetDetails" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" style="max-width: 60%;">
+			<div class="modal-content" style="height: 60%; display: flex; flex-direction: column;">
+				<div class="modal-header">
+					<h5 class="modal-title fw-bold" id="detailModalLabel">Asset Detail</h5>
+					<div style="margin-left: 76%;" class="d-flex g-2">
+						<lable style="margin-right: 10px;">All</lable>
+						<input type="checkbox" id="chkAll" />
+					</div>
+					<button type="button" id="BtnClose" class="btn btn-outline-danger rounded  " data-bs-dismiss="modal" aria-label="Close" style="margin-left: 2%;">
+						<i class="fas fa-times"></i> Close
+					</button>
+				</div>
+				<div class="modal-body" style="flex-grow: 1; overflow-y: auto;">
+					<div class="table-responsive" style="margin-top:15px">
+						<table style="width: 100%;" class="display nowrap table-bordered datatable table table-bordered table-striped custom-table datatable w-100 dataTable" id="tblAssetDetail">
+							<thead class="bg-light">
+								<tr id="tblAssetDetailHeader" class="font_SIZE"></tr>
+							</thead>
+							<tbody id="tblAssetDetailBody" class="font_SIZE">
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="EmployeeMaster" tabindex="-1" aria-labelledby="EmployeeMaster" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered" style="max-width: 65%;">
+			<div class="modal-content" style="height: 550px; display: flex; flex-direction: column;">
+				<div class="modal-header d-flex justify-content-between">
+					<h5 class="modal-title fw-bold" id="EmployeeMaster">Search Employee</h5>
+					<button type="button" id="BtnCloseEmployee" class="btn btn-danger rounded " data-bs-dismiss="modal" aria-label="Close">
+						<i class="fas fa-times"></i> Close
+					</button>
+				</div>
+				<div class="modal-body" style="flex-grow: 1; overflow-y: auto;">
+					<div class="row">
+						<div class="col-md-1">
+							<select id="ddlEmployee" class="form-select" style="width: 82px !important">
+ 								<option value="1">Active</option>
+								<option value="0">De-Active</option>
+								<option value="2">Both</option>
+							</select>
+						</div>
+						<div class="col-md-9">
+							<input type="text" class="form-control" placeholder="Enter Employee Name" id="txtAllSearch" />
+						</div>
+						<div class="col-md-2">
+							<input id="tableSearch" class="form-control"/>
+						</div>
+						 
+					</div>
+					<div class="table-responsive" style="margin-top: 20px">
+						<table style="max-height:280px;" class="display nowrap table-bordered datatable table table-bordered table-striped custom-table datatable w-100 dataTable" id="machineTable">
+							<thead class="bg-light">
+								<tr id="tableHeaders" class="font_SIZE">
+									<td>Location</td>
+									<td>Code</td>
+									<td>Employee</td>
+									<td>Father</td>
+									<td>Adhar No</td>
+									<td>Department</td>
+									<td>Designation</td>
+									<td>DOB</td>
+									<td>Joining Date</td>
+									<td>Status</td>
+									<td>Leving Date</td>
+									<td>UAN</td>
+									<td>PF</td>
+									<td>Pay Date</td>
+									<td>PF WithD</td>
+								</tr>
+							</thead>
+							<tbody id="tableBody" class="font_SIZE">
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Edit Asset Modal -->
+	<div class="modal fade" id="editAssetModal" tabindex="-1" aria-labelledby="editAssetModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header d-flex justify-content-between">
+					<h5 class="modal-title" id="editAssetModalLabel">Edit Asset Details</h5>
+					<button type="button" id="BtnCloseEmployee" class="btn btn-danger rounded " data-bs-dismiss="modal" aria-label="Close">
+						<i class="fa-solid fa-x"></i> Close
+					</button>
+				</div>
+				<div class="modal-body">
+					<form id="editAssetForm">
+
+						<div class="row mb-3">
+							<div class="col-md-6 d-none">
+								<label class="form-label">Asset ID</label>
+								<input type="text" id="editAssetId" class="form-control" readonly>
+							</div>
+							
+							<div class="col-md-6">
+								<label class="form-label">Maintain Type</label>
+								<select id="editMaintainType" class="form-select">
+									<option value="" selected>Maintain Type</option>
+									<option value="Primary RAM">Primary RAM</option>
+									<option value="Primary Storage">Primary Storage</option>
+									<option value="Secondary Storage">Secondary Storage</option>
+									<option value="Keyboard">Keyboard</option>
+									<option value="Wireless Keyboard">Wireless Keyboard</option>
+									<option value="Mouse">Mouse</option>
+									<option value="Wireless Mouse">Wireless Mouse</option>
+									<option value="Wifi Dongle">Wifi Dongle</option>
+									<option value="Bluetooth Dongle">Bluetooth Dongle</option>
+									<option value="Speaker">Speaker</option>
+									<option value="Pendrive">Pendrive</option>
+									<option value="Other">Other</option>
+								</select>
+							</div>
+							<div class="col-md-6">
+								<label class="form-label">Action Type</label>
+								<select id="editActionType" class="form-select" onchange="GenrateRemarks()">
+									<option value="">Action Type</option>
+									<option value="Add">Add</option>
+									<option value="Update">Delete</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="row" id="storageType">
+							<div class="col-md-4" id="strgType">
+								<label class="form-label">Storage Type</label>
+								<select id="ddlStorageType" class="form-select" onchange="GenrateRemarks()">
+									<option value="">Storage Type</option>
+									<option value="HDD">HDD</option>
+									<option value="SSD">SSD</option>
+									<option value="NVME">NVME</option>
+								</select>
+							</div>
+
+							<div class="col-md-4" id="ramType">
+								<label class="form-label">Ram Type</label>
+								<select id="HDD_Ram_Type" class="form-select" onchange="GenrateRemarks()">
+									<option value="DDR 1">DDR 1</option>
+									<option value="DDR 2">DDR 2</option>
+									<option value="DDR 3">DDR 3</option>
+									<option value="DDR 4">DDR 4</option>
+								</select>
+							</div>
+							<div class="col-md-4">
+								<label class="form-label">Capacity</label>
+								<input type="text" id="Capacity" class="form-control" oninput="GenrateRemarks()">
+							</div>
+
+							<div class="col-md-4">
+								<label class="form-label">Used</label>
+								<input type="text" id="Used" class="form-control" oninput="GenrateRemarks()">
+							</div>
+						</div>
+
+						<div class="row mb-3">
+							<div class="col-md-6">
+								<label class="form-label">Date</label>
+								<input type="date" id="editChangeDate" class="form-control" oninput="GenrateRemarks()">
+							</div>
+							<div class="col-md-6">
+								<label class="form-label">Remarks</label>
+								<textarea id="editRemarks" class="form-control" rows="3" style="height: 45px;"></textarea>
+							</div>
+						</div>
+						<div class="row" id="AssetTracDetails">
+
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-success" onclick="SaveAssetDetails()">Save Changes</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<script>
+	let ApiBaseUrl = '@ViewBag.ApiBasurl'
+	let authToken = localStorage.getItem("authToken");
+	$('#hdnLocation').val('0')
+	$('#headingAld').hide()
+	let ReportType =""
+	let AssetCode=""
+	let Location =   $('#hdnLocation').val()
+	var labelText=""
+	let selectedValue=""
+	let selectedText=""
+	let dropdownData=[]
+	let checkedAsset =""
+	let totalAssets
+	let engName = sessionStorage.getItem("UserName");
+	$('#storageType').hide()
+	$('#strgType').hide()
+	$('#ramType').hide()
+
+	$('.chkAllAsset').hide()
+	
+	$(document).ready(function() {
+		$(".datepicker").datepicker();
+		BindPremises()
+		BindReporting()
+		BindTransferdFrom(Location);
+		$('#txtAllSearch').on('keydown', function (e) {
+			if (e.key === 'Enter' || e.keyCode === 13) {
+				e.preventDefault();  
+				BindTransferredTo();  
+	 		}
+	    });
+		$('#EmployeeMaster').on('shown.bs.modal', function() {
+			$('#tableSearch').val('').focus();
+		});
+
+		$('#EmployeeMaster').on('hidden.bs.modal', function() {
+			$('#tableSearch').val('');
+			$('#tableBody .employee-row').show();
+			$('#noResultsRow').remove();
+		});
+
+	});
+
+	function BindTransferdFrom(Location) {
+		let dropdown = $('#ddlMenuTransfer');
+		let searchTextbox = $('#ddlTransfer');
+		let dropdownData = [];
+		let topLoadData = [];
+
+		searchTextbox.off('keyup focus input');
+
+		searchTextbox.attr("placeholder", "Please wait, loading...").prop("disabled", true);
+		let URL = `${ApiBaseUrl}/Asset/BindFromUser?Location=${Location}`;
+
+		$.ajax({
+			url: URL,
+			method: "GET",
+			dataType: "json",
+			headers: { "Authorization": `Bearer ${authToken}` },
+			success: function(response) {
+				dropdownData = response || [];
+				topLoadData = dropdownData.slice(0, 100);
+				searchTextbox.attr("placeholder", "Please Select Transfer from").prop("disabled", false);
+				populateDropdown(dropdown, topLoadData);
+
+				setupSearchHandlers();
+			},
+			error: function(xhr, status, error) {
+				console.error("Error fetching asset details:", error);
+				searchTextbox.attr("placeholder", "Error loading data").prop("disabled", false);
+			}
+		});
+
+		function setupSearchHandlers() {
+			let typingTimer;
+			let lastSearchText = '';
+ 
+			searchTextbox.on('keyup', function(e) {
+				if ([37, 38, 39, 40, 9, 16, 17, 18, 20, 27].indexOf(e.keyCode) !== -1) {
+					return;
+				}
+
+				clearTimeout(typingTimer);
+				let searchText = $(this).val().toLowerCase().trim();
+
+				if (searchText === lastSearchText) {
+					return;
+				}
+
+				lastSearchText = searchText;
+
+				if (searchText.length === 0) {
+					populateDropdown(dropdown, topLoadData);
+					return;
+				}
+
+				typingTimer = setTimeout(function() {
+					let filteredData = dropdownData.filter(item =>
+						(item.DataValue || "").toLowerCase().includes(searchText)
+					);
+					populateDropdown(dropdown, filteredData);
+				}, 150);  
+			});
+
+			searchTextbox.on('focus', function() {
+				this.select();
+			});
+		}
+
+		function populateDropdown(dropdown, data) {
+			dropdown.empty();
+
+			if (data.length === 0) {
+				dropdown.append('<li><a class="dropdown-item text-muted">No results found</a></li>');
+				return;
+			}
+
+			let fragment = document.createDocumentFragment();
+
+			data.forEach(item => {
+				let li = document.createElement('li');
+				let a = document.createElement('a');
+				a.className = 'dropdown-item';
+				a.setAttribute('data-value', item.DataId);
+				a.textContent = item.DataValue || "N/A";
+
+				a.addEventListener('click', function() {
+					handleItemClick(item.DataId, item.DataValue || "N/A");
+				});
+
+				li.appendChild(a);
+				fragment.appendChild(li);
+			});
+			dropdown[0].appendChild(fragment);
+		}
+	}
+
+	function handleItemClick(userName, displayValue) {
+		displayValue = displayValue.replace(/\\'/g, "'");
+
+		$("#ddlTransfer")
+			.val(displayValue)
+			.attr("data-selected-value", userName);
+
+		BindAssetDetails(userName);
+		$('.chkAllAsset').show();
+
+		$('#ddlTransfer').dropdown('hide');
+	}
+
+    function BindPremises() {
+		let URL = `${ApiBaseUrl}/Premises/GetPremises`;
+		let dropdown = $('#ddlPremisesSelect');
+		let searchTextbox = $('#ddlPremises');
+		searchTextbox.html('<li><a class="dropdown-item disabled">Loading...</a></li>');
+		$.ajax({
+			url: URL,
+			method: "GET",
+			dataType: "json",
+			headers: { "Authorization": `Bearer ${authToken}` },
+			success: function(response) {
+				dropdownData = response;
+				populateDropdown(dropdown, dropdownData);
+			},
+			error: function(xhr, status, error) {
+				console.error("Error fetching Premises", error);
+				dropdown.html('<li><a class="dropdown-item disabled">Error loading data</a></li>');
+			}
+		});
+		searchTextbox.on('keyup', function() {
+			let searchText = searchTextbox.val().toLowerCase();
+			let filteredData = dropdownData.filter(item =>
+				(item.compCode || "N/A").toLowerCase().includes(searchText)
+			);
+			populateDropdown(dropdown, filteredData);
+		});
+		function populateDropdown(dropdown, data) {
+			dropdown.empty();
+			if (data.length === 0) {
+				dropdown.html('<li><a class="dropdown-item disabled">No results found</a></li>');
+			} else {
+				data.forEach(item => {
+					dropdown.append(`
+						<li>
+							<a class="dropdown-item" data-value="${item.compCode}"
+							   onclick="FilTxtValue('${item.compCode || "N/A"}', '${item.compCode}', 'ddlPremises')">
+								${item.compCode || "N/A"}
+							</a>
+						</li>
+					`);
+				});
+			}
+		}
+	}
+
+	function FilTxtValue(text, value,ddlid) {
+		$(`#${ddlid}`).val(text).attr("data-selected-value", value);
+		if(ddlid=="ddlPremises")
+		{
+		  $('#ddlDepartment').empty()
+		  BindDepartment()
+		}
+	}
+
+	function BindDepartment(unit = null) {
+		let Premises = $('#ddlPremises').val();
+		if (!Premises) {
+			return;
+		}
+		if (unit == null) {
+			Premises = $('#ddlPremises').val();
+		} else {
+			Premises = unit;
+		}
+		let URL = `${ApiBaseUrl}/Asset/GetDepartment?Unit=${Premises}`;
+		let dropdown = $('#ddlDepartmentSelect');
+		let searchTextbox = $('#ddlDepartment'); 
+		let dropdownData = [];
+		dropdown.html('<li><a class="dropdown-item disabled">Loading...</a></li>');
+		$.ajax({
+			url: URL,
+			method: "GET",
+			dataType: "json",
+			headers: { "Authorization": `Bearer ${authToken}` },
+			success: function(response) {
+				dropdownData = response;
+				populateDropdown(dropdown, dropdownData);
+			},
+			error: function(xhr, status, error) {
+				console.error("Error fetching asset details:", error);
+				dropdown.html('<li><a class="dropdown-item disabled">Error loading data</a></li>');
+			}
+		});
+		searchTextbox.on('keyup', function() {
+			let searchText = searchTextbox.val().toLowerCase();
+			let filteredData = dropdownData.filter(item =>
+				(item.DEPARTMENT || "N/A").toLowerCase().includes(searchText)
+			);
+			populateDropdown(dropdown, filteredData);
+		});
+		function populateDropdown(dropdown, data) {
+			dropdown.empty();
+			if (data.length === 0) {
+				dropdown.html('<li><a class="dropdown-item disabled">No results found</a></li>');
+			} else {
+				data.forEach(item => {
+					dropdown.append(`
+						<li>
+							<a class="dropdown-item" data-value="${item.DEPARTMENT}"
+							   onclick="FilTxtValue('${item.DEPARTMENT || "N/A"}', '${item.DEPARTMENT}', 'ddlDepartment')">
+								${item.DEPARTMENT || "N/A"}
+							</a>
+						</li>
+					`);
+				});
+			}
+		}
+	}
+
+    function BindReporting() {
+		let URL = `${ApiBaseUrl}/Asset/BindReporting`;
+		let dropdown = $('#ddlReportingSelect');
+		let searchTextbox = $('#ddlReporting'); 
+		let dropdownData = [];
+		dropdown.html('<li><a class="dropdown-item disabled">Loading...</a></li>');
+		$.ajax({
+			url: URL,
+			method: "GET",
+			dataType: "json",
+			headers: { "Authorization": `Bearer ${authToken}` },
+			success: function(response) {
+				dropdownData = response;
+				populateDropdown(dropdown, dropdownData);
+			},
+			error: function(xhr, status, error) {
+				console.error("Error fetching asset details:", error);
+				dropdown.html('<li><a class="dropdown-item disabled">Error loading data</a></li>');
+			}
+		});
+		searchTextbox.on('keyup', function() {
+			let searchText = searchTextbox.val().toLowerCase();
+			let filteredData = dropdownData.filter(item =>
+				(item.Reporting_TO || "N/A").toLowerCase().includes(searchText)
+			);
+			populateDropdown(dropdown, filteredData);
+		});
+		function populateDropdown(dropdown, data) {
+			dropdown.empty();
+			if (data.length === 0) {
+				dropdown.html('<li><a class="dropdown-item disabled">No results found</a></li>');
+			} else {
+				data.forEach(item => {
+					dropdown.append(`
+						<li>
+							<a class="dropdown-item" data-value="${item.Reporting_TO}"
+							   onclick="FilTxtValue('${item.Reporting_TO || "N/A"}', '${item.Reporting_TO}', 'ddlReporting')">
+								${item.Reporting_TO || "N/A"}
+							</a>
+						</li>
+					`);
+				});
+			}
+		}
+	}
+
+	function BindAssetDetails(userName) {
+		let URL = `${ApiBaseUrl}/Asset/BindAsset?UserName=${encodeURIComponent(userName)}&Location=${Location}`;
+		$.ajax({
+			url: URL,
+			method: "GET",
+			dataType: "json",
+			headers: { "Authorization": `Bearer ${authToken}` },
+			success: function (data) {
+				$('#bindAssetDetails').empty(); 
+
+				if (!data || data.length === 0) {
+					$('#bindAssetDetails').html(`<p class="text-muted">No asset code available for <strong>${userName}</strong></p>`);
+					return;
+				}
+				$.each(data, function (i, v) {
+					let HtmlBody = `
+						<div class="checkbox-container d-flex align-items-center g-3 p-3 border rounded-3" style="background-color:#f8f9fa">
+							<input type="checkbox" id="chk_${v.DataId}" value="${v.DataId}" class="checkbox-option chkAssetCode" style="margin-right: 10px;margin-bottom: 3px;">
+							<label for="chk_${v.DataId}" class="mb-0 flex-grow-1">${v.DataValue || "N/A"}</label>
+							<div style="cursor:pointer;">
+								<span class="text-primary" data-bs-toggle="modal" data-bs-target="#AssetDetails"
+									  onclick="handleLabelClick('${v.DataId}')">
+									${v.DataId}
+								</span>
+								<i class="fa-solid fa-copy ms-2 text-secondary" style="cursor:pointer;"
+								   onclick="copyToClipboard('${v.DataId}')" title="Copy Asset ID"></i>
+									<button type="button" onclick="openEditModal('${v.DataId}')" style="border:none">
+									  <i class="fa-solid fa-pen"></i>
+									</button>
+							</div>
+						</div>`;
+					$('#bindAssetDetails').append(HtmlBody);
+				});
+
+				$('.chkAssetCode').on('change', function () {
+					let alreadyChecked = $('.chkAssetCode:checked').not(this);  
+
+					if ($(this).is(':checked')) {
+						if (alreadyChecked.length > 0) {
+							 
+							alreadyChecked.prop('checked', false);
+							 
+							Swal.fire({
+								title: "Note",
+								text: "Only one asset can be selected at a time. Previous selection has been cleared.",
+								icon: "info"
+							});
+						}
+					}
+				});
+
+
+			},
+			error: function (xhr, status, error) {
+				console.error("Error fetching asset details:", error);
+			}
+		});
+	}
+
+	function bindDataByAssetCode(AssetCode) {
+		let ReportType = $('#chkAll').prop('checked') ? 1 : 0;
+		AssetCode = AssetCode.trim();
+		const URL = `${ApiBaseUrl}/Asset/BindAssetsReport?AssetsCode=${AssetCode}&UserName=&ReportType=${ReportType}`;
+		let loaderRow = `
+			<tr id="loadingRow">
+				<td colspan="100%" class="text-center py-5">
+					<div class="d-flex justify-content-center align-items-center">
+						<div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+							<span class="sr-only">Loading...</span>
+						</div>
+						<div class="ms-3 fs-5 text-muted">Please wait, loading data...</div>
+					</div>
+				</td>
+			</tr>
+		`;
+		$.ajax({
+			url: URL,
+			method: "GET",
+			dataType: "json",
+			beforeSend: function () {
+				$('#tblAssetDetailBody').empty().append(loaderRow);
+			},
+			success: function (data) {
+				if ($.fn.DataTable.isDataTable('#tblAssetDetail')) {
+						$('#tblAssetDetail').DataTable().destroy();
+					}
+				$('#tblAssetDetailHeader').empty();
+				$('#tblAssetDetailBody').empty();
+
+				if (!data || data.length === 0) {
+					$('#tblAssetDetailBody').append('<tr><td colspan="100%" class="text-center">No data available</td></tr>');
+				} else {
+					const headers = Object.keys(data[0]);
+					headers.forEach(header => {
+						$('#tblAssetDetailHeader').append(`<th>${header.replace(/\s+/g, ' ').trim()}</th>`);
+					});
+					data.forEach((item, index) => {
+						let row = `<tr class="rowHeight" id="${index}">`;
+						headers.forEach(header => {
+							let cellData = item[header] || '';
+							row += `<td>${cellData}</td>`;
+						});
+						row += `</tr>`;
+						$('#tblAssetDetailBody').append(row);
+					});
+					const table = $('#tblAssetDetail').DataTable({
+						paging: true,
+						searching: true,
+						ordering: false,
+						scrollCollapse: false,
+						scrollY: "200px",
+						info: false,
+						autoWidth: false,
+						fixedHeader: true,
+					});
+					setTimeout(() => table.columns.adjust().draw(), 100);
+				}
+			},
+			error: function (xhr, status, error) {
+				console.error("Error fetching data:", error);
+				$('#tblAssetDetailBody').empty().append('<tr><td colspan="100%" class="text-center">Failed to load data. Please try again later.</td></tr>');
+			},
+			complete: function () {
+				$('#loadingRow').remove();
+			}
+		});
+	}
+
+	function handleLabelClick(element)
+	{
+	   labelText =element
+	   bindDataByAssetCode(labelText)
+	}
+
+	function handleImageClick(AssetCode) {
+		let URL = `${ApiBaseUrl}/Asset/GetAssetDataByAssetcode?AssetCode=${AssetCode}`;
+	    let unit = ""
+		$.ajax({
+			url: URL,
+			method: "GET",
+			dataType: "json",
+			headers: { "Authorization": `Bearer ${authToken}` },
+			success: function(data) {
+				console.log(data)
+				$("#Login").empty();
+				$("#Email").empty();
+				$("#GIMSId").empty();
+				$("#VFMID").empty();
+				$("#PadsId").empty();
+				$("#Mobile").empty();
+				$("#IPAddress").empty();
+				$("#ContactExt").empty();
+				$("#InstalledDate").empty();
+				$("#ddlPremises").empty();
+				$("#ddlTransferred").empty();
+				$("#ddlReporting").empty();
+				$("#ddlDepartment").empty();
+				if (data.length > 0) {
+					$("#ddlPremises").val(data[0].INSTALLED_UNIT || "");
+					unit=data[0].INSTALLED_UNIT || null
+					$("#ddlTransferred").val(data[0].USER_NAME || "");
+					$("#ddlReporting").val(data[0].Reporting_TO || "");
+					$("#ddlDepartment").val(data[0].DEPARTMENT || "");
+					$("#Login").val(data[0].Login_Id || "");
+					$("#Email").val(data[0].USER_Mail_ID);
+					$("#GIMSId").val(data[0].GIMS_ID || "");
+					$("#VFMID").val(data[0].VFM_ID || "");
+					$("#PadsId").val(data[0].PADS_ID || "");
+					$("#Mobile").val(data[0].MobileNo || "");
+					$("#IPAddress").val(data[0].Ip_No || "");
+					$("#ContactExt").val(data[0].ContactExtNo || "");
+					$("#txtRemark").val(data[0].REMARKS || "");
+					$("#hdnEmpCode").val(data[0].Employee_Code || "");
+					let installDate = data[0].Install_Date ? data[0].Install_Date.split("T")[0] : "";
+					$("#InstalledDate").val(installDate);
+				} else {
+					console.warn("No asset data found.");
+				}
+				BindDepartment(unit)
+			},
+			error: function(xhr, status, error) {
+				console.error("Error fetching asset data:", error);
+			}
+		});
+	}
+
+	function copyToClipboard(dataId) {
+		navigator.clipboard.writeText(dataId)
+		.then(() => {
+				
+			handleImageClick(dataId);
+		})
+		.catch(err => console.error("Error copying text:", err));
+	}
+
+	function BindHistory() {
+		$('#hdnLocation').val('2');
+		let Location = $('#hdnLocation').val();
+		BindTransferdFrom(Location);
+	}
+
+	$('#chkAll').change(function() {
+		bindDataByAssetCode(labelText);
+	});
+
+	function EdpStock() {
+		if ($('#chkEdp').is(':checked')) {
+			let URL = `${ApiBaseUrl}/Asset/GenerateNewStockNO`;
+			$.ajax({
+				url: URL,
+				method: "GET",
+				dataType: "text",
+				headers: { "Authorization": `Bearer ${authToken}` },
+				success: function (data) {
+					$('#ddlTransferred').val(data);
+					$('#ddlTransferred').prop('disabled', true); 
+				},
+				error: function (xhr, status, error) {
+					console.error(`Error fetching data for EDP checkbox: ${error} (Status: ${xhr.status})`);
+					console.error("Response:", xhr.responseText);
+				}
+			});
+		} else {
+			$('#ddlTransferred').prop('disabled', false);
+			$('#ddlTransferred').val(''); 
+		}
+	}
+
+    function RefreshButtoClick() {
+		location.reload();
+	}
+
+	function BindTransferredTo() {
+		let EmpName = $('#txtAllSearch').val();
+		let Status = $('#ddlEmployee').val();
+		let F_Name = `''`;
+		let PF_Number = "0";
+		let ESI_number = "0";
+		let CompID = "0";
+		let Premise = $('#ddlPremises').val();
+
+		if (Premise === "" || Premise === null || Premise === "0") {
+			showToast("Please Select Premise", "error");
+			$('#EmployeeMaster').modal('hide');
+			return;
+		}
+
+		let URL = `${ApiBaseUrl}/Asset/BindEmployeeMasterDetails?EmpName=${EmpName}&EmployeeStatus=${Status}&F_Name=${F_Name}&PF_Number=${PF_Number}&ESI_number=${ESI_number}&CompID=${CompID}&Premises=${Premise}`;
+		let loaderRow = `
+			<tr id="loadingRow">
+				<td colspan="100%" class="text-center py-5">
+					<div class="d-flex justify-content-center align-items-center">
+						<div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+							<span class="sr-only">Loading...</span>
+						</div>
+						<div class="ms-3 fs-5 text-muted">Please wait, loading data...</div>
+					</div>
+				</td>
+			</tr>
+		`;
+
+		$.ajax({
+			url: URL,
+			method: "GET",
+			dataType: "json",
+			beforeSend: function () {
+				$('#tableBody').empty().append(loaderRow);
+			},
+			success: function (data) {
+				console.log(data);
+				if ($.fn.DataTable.isDataTable('#machineTable')) {
+					$('#machineTable').DataTable().destroy();
+				}
+				$('#tableBody').empty();
+
+				if (!data || data.length === 0) {
+					$('#tableBody').append('<tr><td colspan="100%" class="text-center">No data available</td></tr>');
+				} else {
+					data.forEach((item, index) => {
+						let row = `
+							<tr class="rowHeight employee-row" id="${index}">
+								<td>${item.SAVIOR_COMPCD || ''}</td>
+								<td>${item.CODE || ''}</td>
+								<td>${item.EMPLOYEE || ''}</td>
+								<td>${item.FATHERNAME || ''}</td>
+								<td>${item.Id_Detail || ''}</td>
+								<td>${item.DEPARTMENT || ''}</td>
+								<td>${item.DESIGNATION || ''}</td>
+								<td>${item.DOB || ''}</td>
+								<td>${item.DOJ || ''}</td>
+								<td>${item.STATUS || ''}</td>
+								<td>${item.DOL || ''}</td>
+								<td>${item.uan_No || ''}</td>
+								<td>${item.PFNUMBER || ''}</td>
+								<td>${item.PDATE || ''}</td>
+								<td>${item.PF19_DT || ''}</td>
+							</tr>
+						`;
+						$('#tableBody').append(row);
+					});
+
+					const table = $('#machineTable').DataTable({
+						paging: false,
+						searching: false,
+						ordering: false,
+						scrollCollapse: false,
+						scrollY: "270px",
+						info: false,
+						autoWidth: false,
+						fixedHeader: true,
+					});
+					setTimeout(() => table.columns.adjust().draw(), 100);
+
+					 
+					initializeTableSearch();
+				}
+			},
+			error: function (xhr, status, error) {
+				console.error("Error fetching data:", error);
+				$('#tableBody').empty().append('<tr><td colspan="100%" class="text-center">Failed to load data. Please try again later.</td></tr>');
+			},
+			complete: function () {
+				$('#loadingRow').remove();
+			}
+		});
+	}
+	 
+	function initializeTableSearch() {
+		$('#tableSearch').off('keyup input').on('keyup input', function() {
+			let searchTerm = $(this).val().toLowerCase().trim();
+			let visibleRowCount = 0;
+
+			$('#tableBody .employee-row').each(function() {
+				let rowText = $(this).text().toLowerCase();
+				let shouldShow = searchTerm === '' || rowText.includes(searchTerm);
+
+				if (shouldShow) {
+					$(this).show();
+					visibleRowCount++;
+				} else {
+					$(this).hide();
+				}
+			});
+ 
+			$('#noResultsRow').remove();
+			if (visibleRowCount === 0 && searchTerm !== '') {
+				$('#tableBody').append(`
+					<tr id="noResultsRow">
+						<td colspan="15" class="text-center text-muted py-3">
+							<i class="fas fa-search me-2"></i>No results found for "${searchTerm}"
+						</td>
+					</tr>
+				`);
+			}
+		});
+ 
+		$('#tableSearch').attr('placeholder', '');
+	}
+	 
+	function initializeDataTableSearch() {
+		 
+		if ($.fn.DataTable.isDataTable('#machineTable')) {
+			const table = $('#machineTable').DataTable();
+
+			$('#tableSearch').off('keyup input').on('keyup input', function() {
+				table.search($(this).val()).draw();
+			});
+		}
+	}
+
+	$(document).on("click", "#machineTable tbody tr", function () {
+		let rowData = [];
+		$(this).find('td').each(function () {
+			rowData.push($(this).text().trim());
+		});
+		$('#ddlTransferred').val(rowData[4]);
+		$('#ddlReporting').val(rowData[28]);
+		$('#aldDept').text('Department: ' + rowData[5]);
+		$('#aldDesign').text('Designation: ' + rowData[6]);
+		$('#headingAld').show()
+		let userName = rowData[1];
+		console.log(rowData)
+		let URL = `/Assets/BindDetailedData?UserName=${encodeURIComponent(userName)}&Location=${Location}`;
+		$.ajax({
+			url: URL,
+			method: "GET",
+			dataType: "json",
+			success: function (data) {
+				$('#AssetsNAME').empty(); 
+				$.each(data, function (i, v) {
+					let HtmlBody = `
+						<p>${v.DataValue}</p>`;
+					$('#AssetsNAME').append(HtmlBody);
+				});
+			},
+			error: function (xhr, status, error) {
+				console.error("Error fetching data:", error);
+			}
+		});
+		 $('#EmployeeMaster').modal('hide');
+	});
+	 
+	function transferAsset() {
+		let transferValue = $('#ddlTransfer').val();
+		let Premises = $('#ddlPremises').val();
+		let TargetUser = $('#ddlTransferred').val();
+		let ReportingTo = $('#ddlReporting').val();
+		let FromUser = $('#ddlTransfer').val();
+		let LoginId = $('#Login').val();
+		let Email_ID = $('#Email').val();
+		let GIMS_ID = $('#GIMSId').val();
+		let VFM_ID = $('#VFMID').val();
+		let Pads_ID = $('#PadsId').val();
+		let MobileNO = $('#Mobile').val();
+		let IPAddress = $('#IPAddress').val();
+		let ContactExtNo = $('#ContactExt').val();
+		let InstalledDate = $('#InstalledDate').val();
+		let ScrapRemark = $('#txtRemark').val();
+		let Department = $('#ddlDepartment').val();
+		let Designation = $('#aldDesign').text();
+		let ScrapTransfer = ($('#ChkScrapTransfer').prop('checked') == true ? "1" : "0");
+		 
+		let selectedAssets = [];
+		$('.chkAssetCode:checked').each(function () {
+			let val = $(this).val();
+			if (val && val !== "0") {
+				selectedAssets.push(val);
+			}
+		});
+
+		if (!transferValue || transferValue == "") {
+			showToast("Please Select Transfer From ?", "error");
+			return;
+		} else if (!Premises || Premises == "") {
+			showToast("Please Select Installed Premises ?", "error");
+			return;
+		} else if (!TargetUser || TargetUser == "") {
+			showToast("Please Select Transfer To ?", "error");
+			return;
+		} else if (!Department || Department == "") {
+			showToast("Please Select Department ?", "error");
+			return;
+		} else if (Department !== "SCRAP IN STOCK" && (!ReportingTo || ReportingTo == "")) {
+			showToast("Please Select Reporting To?", "error");
+			return;
+		} else if (!selectedAssets || selectedAssets.length === 0) {
+			showToast("Please Select at least one Asset", "error");
+			return;
+		}
+
+		const Payload = {
+			AssetCode: $('.chkAssetCode:checked').val(),
+			FromUser: FromUser,
+			TargetUser: $('#hdnEmpCode').val(),
+			Premises: Premises,
+			Login_Id: LoginId,
+			Email_ID: Email_ID,
+			GIMS_ID: GIMS_ID,
+			VFM_ID: VFM_ID,
+			PADS_ID: Pads_ID,
+			Reporting_TO: $('#ddlReporting').val(),
+			MobileNo: MobileNO,
+			DEPARTMENT: $('#ddlDepartment').val(),
+			Designation: Designation || '',
+			EngineerName: $('#HEngineerName').val(),
+			Ip_No: IPAddress,
+			ToUserName: $('#ddlTransferred').val(),
+			Install_Date: InstalledDate,
+			ScrapTransfer: ScrapTransfer,
+			ScrapRemark: ScrapRemark,
+			ContactExtNo: ContactExtNo
+		};
+			 
+		$.ajax({
+			url: '/Assets/TransferAsset',
+			method: 'POST',
+			dataType: "json",
+			contentType: 'application/json',
+			data: JSON.stringify(Payload),
+			success: function(response) {
+				Swal.fire({
+					text: `Assets Transferred Successfully`,
+					icon: "success",
+					confirmButtonText: "OK"
+				}).then((result) => {
+					if (result.isConfirmed) {
+						location.reload();
+					}
+				});
+			},
+			error: function(xhr, status, error) {
+				console.error('=== DETAILED ERROR INFO ===');
+				console.error('XHR Object:', xhr);
+				console.error('Status:', status);
+				console.error('Error:', error);
+				console.error('HTTP Status:', xhr.status);
+				console.error('Status Text:', xhr.statusText);
+				console.error('Response Text:', xhr.responseText);
+				console.error('Content Type:', xhr.getResponseHeader('Content-Type'));
+
+				let errorMessage = `HTTP ${xhr.status}: ${xhr.statusText}`;
+				if (xhr.responseText) {
+					try {
+						const errorObj = JSON.parse(xhr.responseText);
+						errorMessage += ` - ${errorObj.message || errorObj.Message || 'Unknown error'}`;
+					} catch (e) {
+						errorMessage += ` - ${xhr.responseText}`;
+					}
+				}
+				Swal.fire({
+				   text: `${errorMessage}`,
+				   icon: "error"
+				});
+			}
+		});
+	}
+
+	$('#chkAllAsset').change(function() {
+		$('.chkAssetCode').prop('checked', $(this).prop('checked'));
+		totalAssets = $('.chkAssetCode').length;
+		checkedAsset = $('.chkAssetCode:checked').length;
+	});
+
+	$('.chkAssetCode').change(function() {
+		if (!$(this).prop('checked')) {
+
+			$('#chkAllAsset').prop('checked', false);
+		}
+		var totalChecked = $('.chkAssetCode:checked').length;
+		var totalAssets = $('.chkAssetCode').length;
+		if (totalChecked === totalAssets) {
+			$('#chkAllAsset').prop('checked', true);
+		}else{
+			$('#chkAllAsset').prop('checked', false);
+		}
+	});
+
+	function openEditModal(assetId) {
+		debugger
+	  document.getElementById('editAssetId').value = assetId;
+	  const editModal = new bootstrap.Modal(document.getElementById('editAssetModal'));
+
+	  $.ajax({
+			url: "/Assets/AssetTracDetails",
+			type: "GET",
+			data: { AssetCode: assetId },
+			success: function (response) {
+				let data = [];
+
+				try {
+					if (typeof response === "string") {
+						data = JSON.parse(response);
+					} else {
+						data = response;
+					}
+				} catch (e) {
+					console.error("JSON parse error:", e);
+					data = [];
+				}
+
+				let tableHtml = `
+					<table class="table table-bordered table-striped">
+						<thead>
+							<tr>
+								<th>Action Type</th>
+								<th>Maintain Type</th>
+								<th>Remarks</th>
+								<th>Changes Date</th>
+							</tr>
+						</thead>
+						<tbody>
+				`;
+
+				if (data && data.length > 0) {
+					data.forEach(item => {
+						tableHtml += `
+							<tr>
+								<td>${item.ActionType || ''}</td>
+								<td>${item.MaintainType || ''}</td>
+								<td>${item.Remarks || ''}</td>
+								<td>${item.ChangesDate ? formatDate(item.ChangesDate) : ''}</td>
+							</tr>
+						`;
+					});
+				} else {
+					tableHtml += `<tr><td colspan="4" class="text-center">No data found</td></tr>`;
+				}
+
+				tableHtml += `</tbody></table>`;
+				$("#AssetTracDetails").html(tableHtml);
+			},
+			error: function (xhr, status, error) {
+				console.error("Error fetching asset details:", error);
+				$("#AssetTracDetails").html(`<div class="text-danger">Data not found for this asset </div>`);
+				$("#editAssetModal").modal("show");
+			}
+		});
+
+		function formatDate(dateString) {
+			const d = new Date(dateString);
+			if (isNaN(d)) return dateString;
+			return d.toLocaleDateString("en-GB");
+		}
+
+	  editModal.show();
+	}
+
+	function SaveAssetDetails() {
+		let assetCode = $('#editAssetId').val();
+		let maintainType = $('#editMaintainType').val();
+		let actionType = $('#editActionType').val();
+		let changeDate = $('#editChangeDate').val();
+		let remark = $('#editRemarks').val();
+		 
+		let payLoad = {
+			AssetCode: assetCode,
+			ActionType: actionType,
+			ChangeDate: changeDate,
+			Remark: remark,
+			Capacity: $('#Capacity').val(),
+			MType: maintainType,
+			HddUsage: $('#Used').val(),
+			U_Engineer:"Sandeeep Rout",
+			LoginName:sessionStorage.getItem('UserName'),
+			RAM_Type:$('#HDD_Ram_Type').val()
+		};
+
+		if (maintainType == "") {
+			alert('Select Maintain Type ');
+			return;
+		}
+
+		if (actionType == "") {
+			alert('Select Action Type ');
+			return;
+		}
+		
+		if (changeDate == "") {
+			alert('Select Change Date ');
+			return;
+		}
+
+		if (maintainType == "Primary Storage" || maintainType == "Primary RAM") {
+			if (HDD_Ram_Type == "") {
+				alert('Select Type');
+				return;
+			}
+			if ($('#Capacity').val() == "") {
+				alert('Enter Capicity');
+				return;
+			}
+		}
+
+		$.ajax({
+			url: '/Assets/UpdateAsset',
+			method: 'POST',
+			contentType: 'application/json',
+			data: JSON.stringify(payLoad),
+			success: function (response) {
+				let modal = bootstrap.Modal.getInstance(document.getElementById('editAssetModal'));
+				if (modal) modal.hide();
+				SweetAlter("Asset updated successfully!",'success');
+			},
+			error: function (xhr, status, error) {
+				console.error("Error updating asset:", error);
+				alert("Failed to update asset. Please try again.");
+			}
+		});
+	}
+
+	$('#editMaintainType').on('change', function () {
+		let ddlSelectValue = $('#editMaintainType').val();
+		if (ddlSelectValue == "Primary RAM" || ddlSelectValue == "Primary Storage") {
+			$.ajax({
+				url: '/Assets/GetStorageData',
+				type: "POST",
+				data: JSON.stringify({ CPU_ASSET_CODE: $('#editAssetId').val() }),
+				contentType: 'application/json',
+				success: function (data) {
+					 
+					let parsedData = typeof data === 'string' ? JSON.parse(data) : data;
+					
+					if (parsedData && parsedData.length > 0) {
+						$('#Used').val(parsedData[0].HddUsage);
+						$('#Capacity').val(parsedData[0].HDD);
+						$('#editActionType').empty();
+					    $('#editActionType').append('<option value="Update" selected>Update</option>');
+						GenrateRemarks()
+					}
+
+					if (ddlSelectValue == "Primary RAM"){
+						$('#strgType').hide()
+						$('#ramType').show()
+					}
+
+					if (ddlSelectValue == "Primary Storage"){
+						$('#strgType').show()
+						$('#ramType').hide()
+					}
+					$('#storageType').show();
+				},
+				error: function (xhr, status, error) {
+					console.error("AJAX Error:", error);
+					console.log("Response:", xhr.responseText);
+				}
+			});
+		} else {
+			$('#storageType').hide();
+			GenrateRemarks()
+		}
+	});
+
+	function GenrateRemarks() {
+		const maintainType = $('#editMaintainType').val() || '';
+		const actionType = $('#editActionType').val() || '';
+		const changeDate = $('#editChangeDate').val() || '';
+		const storageType = $('#ddlStorageType').val() || '';
+		const hddRamType = $('#HDD_Ram_Type').val() || '';
+		const capacity = $('#Capacity').val() || '';
+		const used = $('#Used').val() || '';
+		 
+		if(maintainType == "Primary RAM")
+		{
+			let remarks = `${actionType} ${maintainType} ${hddRamType} ${capacity} ${used} Date: ${changeDate}`;
+		    $('#editRemarks').val(remarks);
+			return
+		}
+		if(maintainType == "Primary Storage")
+		{
+			let remarks = `${actionType} ${maintainType} ${storageType} ${capacity} ${used} Date: ${changeDate}`;
+		    $('#editRemarks').val(remarks);
+			return
+		}
+		else{
+			let remarks = `${actionType} ${maintainType} Date: ${changeDate}`;
+		    $('#editRemarks').val(remarks);
+		}
+	}
+
+	function BindTargetUserDetail(UserName) {
+		var ScrapTransfer = $('#ChkScrapTransfer').prop('checked');
+		var Location = 0;
+		$.ajax(
+		{
+			type: "GET",
+			url: URL + "/BindAsset",
+			contentType: "application/json; charset=utf-8",
+			data: { UserName: JSON.stringify(UserName), ScrapTransfer: JSON.stringify(ScrapTransfer), Location: JSON.stringify(Location) },
+			dataType: "json",
+			success: function (response) {
+				console.log(response)
+				$.each(response.d, function () {
+				
+				});
+
+			},
+			failure: function (errMsg) {
+				$('#errorMessage').text(errMsg);
+			}
+		});
+	}
+
+</script>

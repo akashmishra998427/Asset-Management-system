@@ -1,0 +1,267 @@
+﻿@{
+	ViewData["Title"] = "MachineBarcodePrint";
+	Layout = "~/Views/Shared/ItLayout.cshtml";
+}
+<link href="~/css/site.css" rel="stylesheet" />
+<div class="container">
+	<h3 class="mb-4">Machine Barcode</h3>
+
+	<div class="row">
+		<div class="col-md-4">
+			<div class="search-section">
+				<div class="mb-3 row">
+					<div class="col-6">
+						<label for="ddlpremises" class="form-label">Premises</label>
+						<select id="ddlpremises" class="form-select">
+							<option>Select Premises</option>
+						</select>
+					</div>
+					<div class="col-6">
+						<label for="ddlLine" class="form-label">Line</label>
+						<select id="ddlLine" class="form-select"></select>
+					</div>
+				</div>
+
+				<div class="row mb-3">
+					<div class="col-6">
+						<label for="ddlModalNo" class="form-label">Modal</label>
+						<select id="ddlModalNo" class="form-select">
+							<option selected></option>
+						</select>
+					</div>
+
+					<div class="col-6">
+						<label for="ddlModalNo" class="form-label">Machine Sr No</label>
+						<input type="text" id="txtMachineSrNo" class="form-control" />
+					</div>
+				</div>
+				<div class="inline justify-content-end">
+					<input id="btnSearch" class="btn btn-primary  " type="button" value="View" />
+					<input id="btnGenerateBarcode" class="btn btn-primary  " type="button" value="Generate Barcode" />
+				</div>
+			</div>
+
+			<div class="checkbox-list" style="display:none;background-color: #f8f9fa; padding: 10px; border-radius: 5px;">
+				<div class="form-check mb-2" id="form_Check">
+					<div class='row'>
+						<div class='col-2 d-flex justify-content-center'>
+							<input class="form-check-input" type="checkbox" value="" id="chkAll">
+						</div>
+						<div class='col-3 d-flex justify-content-start'>
+							<label class="form-check-label fw-bold" style="font-size:14px">Code</label>
+						</div>
+						<div class='col-3 d-flex justify-content-start'>
+							<label class="form-check-label fw-bold" style="font-size:14px">Model</label>
+						</div>
+						<div class='col-4 d-flex justify-content-start'>
+							<label class="form-check-label fw-bold" style="font-size:14px">Machine SrNo</label>
+						</div>
+					</div>
+				</div>
+				<hr style="margin: 5px 0;">
+				<div id="dvMachineList">
+				</div>
+			</div>
+		</div>
+		<div class="col-md-8">
+			<div class="report-viewer">
+				<div id="pdf-container">
+					<iframe id="pdf-frame" src="" style="width: 100%; height: 600px; border: none;"></iframe>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	var ApiURL = "@ViewBag.ApiBasurl";
+	let authToken = localStorage.getItem("authToken");
+
+	$(document).ready(function () {
+		GetPremises();
+		$('#ddlpremises').change(function () {
+			GetModelNo();
+			GetLine();
+		})
+		$('#ddlLine').change(function () {
+			GetModelNo();
+		})
+		$('#btnSearch').click(function () {
+			GetMachineList()
+		})
+		$('#chkAll').click(function () {
+			$('.MCode').prop('checked', this.checked);
+
+		})
+ 		 
+	});
+
+	async function GetPremises() {
+	   let url = `${ApiURL}/Premises/GetPremises`;
+	   $('#ddlpremises').find('option').remove();
+	   try {
+		   let response = await fetch(url, { headers: { Authorization: `Bearer ${authToken}` } });
+		   if (!response.ok) {
+			   throw new Error(`HTTP error! status: ${response.status}`);
+		   }
+		   let result = await response.json();
+		   $('#ddlpremises').append($("<option></option>").attr("value", "").text(""));
+		   result.forEach((item) => {
+			   $('#ddlpremises').append($("<option></option>").attr("value", item.compCode).text(item.n_CompCode));
+		   });
+		   return result;
+	   } catch (error) {
+	   }
+	}
+
+	async function GetLine() {
+		var CompCode = $('#ddlpremises').find('option:selected').val();
+		let url = `${ApiURL}/Production/GetLineNo?department=sewing&compCode=${CompCode}`;
+		try{
+			let response = await fetch(url,{ headers: { Authorization: `Bearer ${authToken}` } });
+			if(!response.ok)
+			{
+			   throw new Error(`HTTP error! status: ${response.status}`);
+			}
+			let result = await response.json();
+			 $('#ddlLine').empty();
+			$('#ddlLine').append($("<option></option>").attr("value", "").text(""));
+			result.forEach((item) => {
+					$('#ddlLine').append($("<option></option>").attr("value", item.id).text(item.lineNo));
+			});
+		   return result;
+		}catch(error){
+		}
+	}
+
+	async function GetModelNo() {
+		var CompCode = $('#ddlpremises').find('option:selected').val();
+		var LineID = $('#ddlLine').find('option:selected').val() || "";
+		let URL = `/ProductionMachine/BindModelNo`;
+		const payload = {
+			LineID: LineID,
+			CompCode: CompCode
+		};
+		try {
+			let response = await fetch(URL, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(payload)
+			});
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+			let result = await response.json();
+			$('#ddlModalNo').empty();
+			$('#ddlModalNo').append($("<option></option>").attr("value", "").text(""));
+			result.forEach((item) => {
+				$('#ddlModalNo').append($("<option></option>").attr("value", item.ModelNo).text(item.ModelNo));
+			});
+
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
+	async function GetMachineList() {
+		$('#form_Check').css('display','block')
+		$('.checkbox-list').css('display','block')
+		var CompCode = $('#ddlpremises').find('option:selected').val();
+		var ModalNo = $('#ddlModalNo').find('option:selected').val();
+		var LineID = $('#ddlLine').find('option:selected').val() || "";
+		
+		const payload = {
+			CompCode: CompCode,
+			ModelNo: ModalNo,
+			LineID: LineID,
+			MachineSrNo:$('#txtMachineSrNo').val()
+		};
+
+		let url = `/ProductionMachine/GetMachineList`;
+		$('#dvMachineList').empty();
+		try {
+			let response = await fetch(url, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(payload)
+			});
+ 
+			if (!response.ok) {
+				let errorText = await response.text();
+				throw new Error(`Error ${response.status}: ${errorText}`);
+			}
+			let machines = await response.json();
+			if (!machines || machines.length === 0) {
+				$('#dvMachineList').append("<p>No Machines found.</p>");
+				return;
+			}
+			console.log(machines)
+			machines.forEach((item) => {
+				let html = `
+					<div class="form-check mb-1">
+						<div class='row'>
+							<div class='col-2 d-flex justify-content-center'>
+								<input class="form-check-input MCode" type="checkbox" value="${item.ID}">
+							</div>
+							<div class='col-3 d-flex justify-content-start'>
+								<label class="form-check-label" style="font-size:12px; word-wrap: break-word;">${item.MachineCode || ''}</label>
+							</div>
+							<div class='col-3 d-flex justify-content-start'>
+								<label class="form-check-label" style="font-size:12px; word-wrap: break-word;">${item.ModelNo || ''}</label>
+							</div>  
+							<div class='col-4 d-flex justify-content-start'>
+								<label class="form-check-label" style="font-size:12px; word-wrap: break-word;">${item.MachineSrNo || ''}</label>
+							</div>
+						</div>
+					</div>`;
+				$('#dvMachineList').append(html);
+			});
+			return machines;
+		} catch (error) {
+			console.error('Failed to fetch machine list:', error);
+			alert("Error fetching machine list. Please try again later.");
+		}
+	}
+
+	$('#btnGenerateBarcode').on('click', function () {
+		var selectedCheckboxes = $('input:checkbox.MCode:checked');
+		if (selectedCheckboxes.length === 0 ) {
+			fireSweetAlert("Please select at least one machine. QR Code",'error');
+			return;
+		}
+		   
+		var MachineIDs = selectedCheckboxes.map(function () {
+			return parseInt(this.value);
+		}).get().join()
+
+		$('#pdf-frame').attr('src', '');
+		$('#pdf-container').html('<div class="text-center p-4"><div class="spinner-border" role="status"><span class="visually-hidden">Loading...</span></div><p>Generating QR Codes...</p></div>');
+		fetch('/ProductionMachine/ViewBarcodePdf', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({MachineID:MachineIDs})
+		})
+		.then(response => {
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+			return response.blob();
+		})
+		.then(blob => {
+			const pdfUrl = URL.createObjectURL(blob);
+			$('#pdf-container').html('<iframe id="pdf-frame" src="" style="width: 100%; height: 600px; border: none;"></iframe>');
+			$('#pdf-frame').attr('src', pdfUrl);
+		})
+		.catch(error => {
+			console.error('Error:', error);
+			$('#pdf-container').html('<div class="alert alert-danger">Error Generating QR Codes. Please try again.</div>');
+			alert('Error generating PDF: ' + error.message);
+		});
+	});
+</script>

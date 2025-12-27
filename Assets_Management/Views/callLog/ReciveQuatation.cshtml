@@ -1,0 +1,188 @@
+﻿@{
+    ViewData["Title"] = "Receive Quotation";
+    Layout = "~/Views/Shared/BkanckLayout.cshtml";
+}
+
+<style>
+    body {
+        background: linear-gradient(135deg, #e3f2fd, #f0f9ff);
+        font-family: 'Segoe UI', sans-serif;
+    }
+
+    .quotation-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 30px;
+    }
+
+    .quotation-card {
+        background: #fff;
+        width: 100%;
+        max-width: 1100px;
+        border-radius: 16px;
+        box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        padding: 35px 45px;
+    }
+
+    .quotation-header {
+        text-align: center;
+        border-bottom: 3px solid #0097d7;
+        padding-bottom: 15px;
+        margin-bottom: 30px;
+    }
+
+    .quotation-header h2 {
+        color: #0097d7;
+        font-weight: 700;
+        letter-spacing: 1px;
+    }
+
+    label {
+        font-weight: 600;
+        color: #1474A4;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        padding: 10px 12px;
+        border: 1px solid #cfd8dc;
+        transition: 0.3s;
+    }
+
+        .form-control:focus {
+            border-color: #0097d7;
+            box-shadow: 0 0 0 0.2rem rgba(0, 151, 215, 0.25);
+        }
+
+    .btn-submit {
+        background-color: #0097d7;
+        color: white;
+        font-weight: 600;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 30px;
+        font-size: 16px;
+        transition: 0.3s;
+    }
+
+    .btn-submit:hover {
+        background-color: #007bb5;
+    }
+
+    .section-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #0097d7;
+        border-bottom: 2px solid #0097d7;
+        margin-top: 25px;
+        margin-bottom: 15px;
+        padding-bottom: 5px;
+    }
+</style>
+
+<div class="quotation-container">
+    <div class="quotation-card">
+        <div class="quotation-header">
+            <h2><i class="bi bi-file-earmark-text"></i> Quotation Details</h2>
+        </div>
+
+        <form> 
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label>Category</label>
+                    <input type="text" id="txtCategory" class="form-control" placeholder="Enter category">
+                </div>
+                <div class="col-md-3">
+                    <label>Item Name / Description</label>
+                    <input type="text" id="txtItemName" class="form-control" placeholder="Enter item name">
+                </div>
+                <div class="col-md-3">
+                    <label>Brand / Model</label>
+                    <input type="text" id="txtBrandModel" class="form-control" placeholder="Brand or model">
+                </div>
+                <div class="col-md-3">
+                    <label>Unit</label>
+                    <input type="text" id="txtUnit" class="form-control" placeholder="Unit">
+                </div>
+            </div>
+             
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label>Quantity</label>
+                    <input type="number" id="txtQuantity" class="form-control" placeholder="0">
+                </div>
+                <div class="col-md-3">
+                    <label>Unit Price (₹)</label>
+                    <input type="number" id="txtUnitPrice" class="form-control" placeholder="0.00">
+                </div>
+                <div class="col-md-3">
+                    <label>Total Amount (₹)</label>
+                    <input type="number" id="txtTotalAmount" class="form-control" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label>Discount (%)</label>
+                    <input type="number" id="txtDiscount" class="form-control" placeholder="0">
+                </div>
+            </div>
+
+            <div class="row g-3 mt-1">
+                <div class="col-md-3">
+                    <label>Net Amount (₹)</label>
+                    <input type="number" id="txtNetAmount" class="form-control" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label>Delivery Time (Days)</label>
+                    <input type="number" id="txtDeliveryTime" class="form-control" placeholder="Days">
+                </div>
+                <div class="col-md-6">
+                    <label>Warranty / Quality Remarks</label>
+                    <input type="text" id="txtWarrantyRemarks" class="form-control" placeholder="Warranty or remarks">
+                </div>
+            </div>
+              
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label>Vendor Name</label>
+                    <input type="text" id="txtVendorName" class="form-control" placeholder="Enter vendor name">
+                </div>
+                <div class="col-md-4">
+                    <label>Vendor Contact / Email</label>
+                    <input type="text" id="txtVendorContact" class="form-control" placeholder="Email or phone">
+                </div>
+                <div class="col-md-2">
+                    <label>Quotation No.</label>
+                    <input type="text" id="txtQuotationNo" class="form-control" placeholder="#">
+                </div>
+                <div class="col-md-2">
+                    <label>Quotation Date</label>
+                    <input type="date" id="txtQuotationDate" class="form-control">
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <button type="button" class="btn-submit" id="btnSave">
+                    <i class="bi bi-save"></i> Save Quotation
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+ 
+
+<script>
+
+	const urlParams = new URLSearchParams(window.location.search);
+	const Category = urlParams.get("Category");
+	const ItemName = urlParams.get("ItemName");
+	const Unit = urlParams.get("Unit");
+	const QutationNo = urlParams.get("QutationNo"); 
+
+	$(document).ready(function() {
+			 
+	});
+
+</script>

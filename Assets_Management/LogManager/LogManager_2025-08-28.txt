@@ -1,0 +1,856 @@
+2025-08-28 06:11:57 : SQL Error: Error converting data type nvarchar to float., Query: 
+                    INSERT INTO asset (  
+                        CPU_ASSET_CODE, SR_NO, DEPT, MAKE, Model_Number,  
+                        PURCHASE_UNIT, PURCHASE_DATE_YEAR, Bill_No, Bill_Date,  
+                        vendor, Ip_No, RemoteAllowed, [Host_Name], PROCESSOR,  
+                        RAM, HDD, Asset_Type, [Group], Screen_Size, INSTALLED_UNIT, HDD_Type, RAM_Type,  
+                        WARRANTY_AMC  
+                    )  
+                    VALUES (  
+                        @CPU_ASSET_CODE, @SR_NO, @DEPT, @MAKE, @Model_Number,  
+                        @PURCHASE_UNIT, @PURCHASE_DATE_YEAR, @Bill_No, @Bill_Date,  
+                        @vendor, @Ip_No, @RemoteAllowed, @Host_Name, @PROCESSOR,  
+                        @RAM, @HDD, @Asset_Type, @Group, @Screen_Size, @INSTALLED_UNIT, @HDD_Type, @RAM_Type,  
+                        @WARRANTY_AMC  
+                    );  
+
+                    INSERT INTO tbl_AddationalAsset_Info 
+                        (AssetCode, Price, UsedBy, WarrantyValidity, Warranty_Months)  
+                    VALUES 
+                        (@AssetCode, @Price, @UsedBy, @WarrantyValidity, @Warranty_Months);, 
+ StackTrace:    at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at Microsoft.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader(Boolean isInternal, Boolean forDescribeParameterEncryption)
+   at Microsoft.Data.SqlClient.SqlCommand.InternalEndExecuteNonQuery(IAsyncResult asyncResult, Boolean isInternal, String endMethod)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryAsync(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<InternalExecuteNonQueryAsync>b__193_1(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at AssetManagement_DataAccess.SQL_DB.ExecuteNonQuery(String query, Dictionary`2 parameters) in D:\Akash\Assets_Management\AssetManagement_DataAccess\SQL_DB.cs:line 94
+2025-08-28 06:13:35 : An error occurred while executing the query: 
+                    INSERT INTO asset (  
+                        CPU_ASSET_CODE, SR_NO, DEPT, MAKE, Model_Number,  
+                        PURCHASE_UNIT, PURCHASE_DATE_YEAR, Bill_No, Bill_Date,  
+                        vendor, Ip_No, RemoteAllowed, [Host_Name], PROCESSOR,  
+                        RAM, HDD, Asset_Type, [Group], Screen_Size, INSTALLED_UNIT, HDD_Type, RAM_Type,  
+                        WARRANTY_AMC  
+                    )  
+                    VALUES (  
+                        @CPU_ASSET_CODE, @SR_NO, @DEPT, @MAKE, @Model_Number,  
+                        @PURCHASE_UNIT, @PURCHASE_DATE_YEAR, @Bill_No, @Bill_Date,  
+                        @vendor, @Ip_No, @RemoteAllowed, @Host_Name, @PROCESSOR,  
+                        @RAM, @HDD, @Asset_Type, @Group, @Screen_Size, @INSTALLED_UNIT, @HDD_Type, @RAM_Type,  
+                        @WARRANTY_AMC  
+                    );  
+
+                    INSERT INTO tbl_AddationalAsset_Info 
+                        (AssetCode, Price, UsedBy, WarrantyValidity, Warranty_Months)  
+                    VALUES 
+                        (@AssetCode, @Price, @UsedBy, @WarrantyValidity, @Warranty_Months);
+2025-08-28 06:16:22 : SQL Error: Error converting data type nvarchar to float., Query: 
+                    INSERT INTO asset (  
+                        CPU_ASSET_CODE, SR_NO, DEPT, MAKE, Model_Number,  
+                        PURCHASE_UNIT, PURCHASE_DATE_YEAR, Bill_No, Bill_Date,  
+                        vendor, Ip_No, RemoteAllowed, [Host_Name], PROCESSOR,  
+                        RAM, HDD, Asset_Type, [Group], Screen_Size, INSTALLED_UNIT, HDD_Type, RAM_Type,  
+                        WARRANTY_AMC  
+                    )  
+                    VALUES (  
+                        @CPU_ASSET_CODE, @SR_NO, @DEPT, @MAKE, @Model_Number,  
+                        @PURCHASE_UNIT, @PURCHASE_DATE_YEAR, @Bill_No, @Bill_Date,  
+                        @vendor, @Ip_No, @RemoteAllowed, @Host_Name, @PROCESSOR,  
+                        @RAM, @HDD, @Asset_Type, @Group, @Screen_Size, @INSTALLED_UNIT, @HDD_Type, @RAM_Type,  
+                        @WARRANTY_AMC  
+                    );  
+
+                    INSERT INTO tbl_AddationalAsset_Info 
+                        (AssetCode, Price, UsedBy, WarrantyValidity, Warranty_Months)  
+                    VALUES 
+                        (@AssetCode, @Price, @UsedBy, @WarrantyValidity, @Warranty_Months);, 
+ StackTrace:    at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at Microsoft.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader(Boolean isInternal, Boolean forDescribeParameterEncryption)
+   at Microsoft.Data.SqlClient.SqlCommand.InternalEndExecuteNonQuery(IAsyncResult asyncResult, Boolean isInternal, String endMethod)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryAsync(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<InternalExecuteNonQueryAsync>b__193_1(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at AssetManagement_DataAccess.SQL_DB.ExecuteNonQuery(String query, Dictionary`2 parameters) in D:\Akash\Assets_Management\AssetManagement_DataAccess\SQL_DB.cs:line 94
+2025-08-28 06:16:22 : An error occurred while executing the query: 
+                    INSERT INTO asset (  
+                        CPU_ASSET_CODE, SR_NO, DEPT, MAKE, Model_Number,  
+                        PURCHASE_UNIT, PURCHASE_DATE_YEAR, Bill_No, Bill_Date,  
+                        vendor, Ip_No, RemoteAllowed, [Host_Name], PROCESSOR,  
+                        RAM, HDD, Asset_Type, [Group], Screen_Size, INSTALLED_UNIT, HDD_Type, RAM_Type,  
+                        WARRANTY_AMC  
+                    )  
+                    VALUES (  
+                        @CPU_ASSET_CODE, @SR_NO, @DEPT, @MAKE, @Model_Number,  
+                        @PURCHASE_UNIT, @PURCHASE_DATE_YEAR, @Bill_No, @Bill_Date,  
+                        @vendor, @Ip_No, @RemoteAllowed, @Host_Name, @PROCESSOR,  
+                        @RAM, @HDD, @Asset_Type, @Group, @Screen_Size, @INSTALLED_UNIT, @HDD_Type, @RAM_Type,  
+                        @WARRANTY_AMC  
+                    );  
+
+                    INSERT INTO tbl_AddationalAsset_Info 
+                        (AssetCode, Price, UsedBy, WarrantyValidity, Warranty_Months)  
+                    VALUES 
+                        (@AssetCode, @Price, @UsedBy, @WarrantyValidity, @Warranty_Months);
+2025-08-28 06:16:42 : SQL Error: Error converting data type nvarchar to float., Query: 
+                    INSERT INTO asset (  
+                        CPU_ASSET_CODE, SR_NO, DEPT, MAKE, Model_Number,  
+                        PURCHASE_UNIT, PURCHASE_DATE_YEAR, Bill_No, Bill_Date,  
+                        vendor, Ip_No, RemoteAllowed, [Host_Name], PROCESSOR,  
+                        RAM, HDD, Asset_Type, [Group], Screen_Size, INSTALLED_UNIT, HDD_Type, RAM_Type,  
+                        WARRANTY_AMC  
+                    )  
+                    VALUES (  
+                        @CPU_ASSET_CODE, @SR_NO, @DEPT, @MAKE, @Model_Number,  
+                        @PURCHASE_UNIT, @PURCHASE_DATE_YEAR, @Bill_No, @Bill_Date,  
+                        @vendor, @Ip_No, @RemoteAllowed, @Host_Name, @PROCESSOR,  
+                        @RAM, @HDD, @Asset_Type, @Group, @Screen_Size, @INSTALLED_UNIT, @HDD_Type, @RAM_Type,  
+                        @WARRANTY_AMC  
+                    );  
+
+                    INSERT INTO tbl_AddationalAsset_Info 
+                        (AssetCode, Price, UsedBy, WarrantyValidity, Warranty_Months)  
+                    VALUES 
+                        (@AssetCode, @Price, @UsedBy, @WarrantyValidity, @Warranty_Months);, 
+ StackTrace:    at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at Microsoft.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader(Boolean isInternal, Boolean forDescribeParameterEncryption)
+   at Microsoft.Data.SqlClient.SqlCommand.InternalEndExecuteNonQuery(IAsyncResult asyncResult, Boolean isInternal, String endMethod)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryAsync(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<InternalExecuteNonQueryAsync>b__193_1(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at AssetManagement_DataAccess.SQL_DB.ExecuteNonQuery(String query, Dictionary`2 parameters) in D:\Akash\Assets_Management\AssetManagement_DataAccess\SQL_DB.cs:line 94
+2025-08-28 06:16:42 : An error occurred while executing the query: 
+                    INSERT INTO asset (  
+                        CPU_ASSET_CODE, SR_NO, DEPT, MAKE, Model_Number,  
+                        PURCHASE_UNIT, PURCHASE_DATE_YEAR, Bill_No, Bill_Date,  
+                        vendor, Ip_No, RemoteAllowed, [Host_Name], PROCESSOR,  
+                        RAM, HDD, Asset_Type, [Group], Screen_Size, INSTALLED_UNIT, HDD_Type, RAM_Type,  
+                        WARRANTY_AMC  
+                    )  
+                    VALUES (  
+                        @CPU_ASSET_CODE, @SR_NO, @DEPT, @MAKE, @Model_Number,  
+                        @PURCHASE_UNIT, @PURCHASE_DATE_YEAR, @Bill_No, @Bill_Date,  
+                        @vendor, @Ip_No, @RemoteAllowed, @Host_Name, @PROCESSOR,  
+                        @RAM, @HDD, @Asset_Type, @Group, @Screen_Size, @INSTALLED_UNIT, @HDD_Type, @RAM_Type,  
+                        @WARRANTY_AMC  
+                    );  
+
+                    INSERT INTO tbl_AddationalAsset_Info 
+                        (AssetCode, Price, UsedBy, WarrantyValidity, Warranty_Months)  
+                    VALUES 
+                        (@AssetCode, @Price, @UsedBy, @WarrantyValidity, @Warranty_Months);
+2025-08-28 06:17:39 : SQL Error: Error converting data type nvarchar to float., Query: 
+                    INSERT INTO asset (  
+                        CPU_ASSET_CODE, SR_NO, DEPT, MAKE, Model_Number,  
+                        PURCHASE_UNIT, PURCHASE_DATE_YEAR, Bill_No, Bill_Date,  
+                        vendor, Ip_No, RemoteAllowed, [Host_Name], PROCESSOR,  
+                        RAM, HDD, Asset_Type, [Group], Screen_Size, INSTALLED_UNIT, HDD_Type, RAM_Type,  
+                        WARRANTY_AMC  
+                    )  
+                    VALUES (  
+                        @CPU_ASSET_CODE, @SR_NO, @DEPT, @MAKE, @Model_Number,  
+                        @PURCHASE_UNIT, @PURCHASE_DATE_YEAR, @Bill_No, @Bill_Date,  
+                        @vendor, @Ip_No, @RemoteAllowed, @Host_Name, @PROCESSOR,  
+                        @RAM, @HDD, @Asset_Type, @Group, @Screen_Size, @INSTALLED_UNIT, @HDD_Type, @RAM_Type,  
+                        @WARRANTY_AMC  
+                    );  
+
+                    INSERT INTO tbl_AddationalAsset_Info 
+                        (AssetCode, Price, UsedBy, WarrantyValidity, Warranty_Months)  
+                    VALUES 
+                        (@AssetCode, @Price, @UsedBy, @WarrantyValidity, @Warranty_Months);, 
+ StackTrace:    at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at Microsoft.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader(Boolean isInternal, Boolean forDescribeParameterEncryption)
+   at Microsoft.Data.SqlClient.SqlCommand.InternalEndExecuteNonQuery(IAsyncResult asyncResult, Boolean isInternal, String endMethod)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryAsync(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<InternalExecuteNonQueryAsync>b__193_1(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at AssetManagement_DataAccess.SQL_DB.ExecuteNonQuery(String query, Dictionary`2 parameters) in D:\Akash\Assets_Management\AssetManagement_DataAccess\SQL_DB.cs:line 94
+2025-08-28 06:17:39 : An error occurred while executing the query: 
+                    INSERT INTO asset (  
+                        CPU_ASSET_CODE, SR_NO, DEPT, MAKE, Model_Number,  
+                        PURCHASE_UNIT, PURCHASE_DATE_YEAR, Bill_No, Bill_Date,  
+                        vendor, Ip_No, RemoteAllowed, [Host_Name], PROCESSOR,  
+                        RAM, HDD, Asset_Type, [Group], Screen_Size, INSTALLED_UNIT, HDD_Type, RAM_Type,  
+                        WARRANTY_AMC  
+                    )  
+                    VALUES (  
+                        @CPU_ASSET_CODE, @SR_NO, @DEPT, @MAKE, @Model_Number,  
+                        @PURCHASE_UNIT, @PURCHASE_DATE_YEAR, @Bill_No, @Bill_Date,  
+                        @vendor, @Ip_No, @RemoteAllowed, @Host_Name, @PROCESSOR,  
+                        @RAM, @HDD, @Asset_Type, @Group, @Screen_Size, @INSTALLED_UNIT, @HDD_Type, @RAM_Type,  
+                        @WARRANTY_AMC  
+                    );  
+
+                    INSERT INTO tbl_AddationalAsset_Info 
+                        (AssetCode, Price, UsedBy, WarrantyValidity, Warranty_Months)  
+                    VALUES 
+                        (@AssetCode, @Price, @UsedBy, @WarrantyValidity, @Warranty_Months);
+2025-08-28 06:19:02 : SQL Error: Error converting data type nvarchar to float., Query: 
+                    INSERT INTO asset (  
+                        CPU_ASSET_CODE, SR_NO, DEPT, MAKE, Model_Number,  
+                        PURCHASE_UNIT, PURCHASE_DATE_YEAR, Bill_No, Bill_Date,  
+                        vendor, Ip_No, RemoteAllowed, [Host_Name], PROCESSOR,  
+                        RAM, HDD, Asset_Type, [Group], Screen_Size, INSTALLED_UNIT, HDD_Type, RAM_Type,  
+                        WARRANTY_AMC  
+                    )  
+                    VALUES (  
+                        @CPU_ASSET_CODE, @SR_NO, @DEPT, @MAKE, @Model_Number,  
+                        @PURCHASE_UNIT, @PURCHASE_DATE_YEAR, @Bill_No, @Bill_Date,  
+                        @vendor, @Ip_No, @RemoteAllowed, @Host_Name, @PROCESSOR,  
+                        @RAM, @HDD, @Asset_Type, @Group, @Screen_Size, @INSTALLED_UNIT, @HDD_Type, @RAM_Type,  
+                        @WARRANTY_AMC  
+                    );  
+
+                    INSERT INTO tbl_AddationalAsset_Info 
+                        (AssetCode, Price, UsedBy, WarrantyValidity, Warranty_Months)  
+                    VALUES 
+                        (@AssetCode, @Price, @UsedBy, @WarrantyValidity, @Warranty_Months);, 
+ StackTrace:    at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at Microsoft.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader(Boolean isInternal, Boolean forDescribeParameterEncryption)
+   at Microsoft.Data.SqlClient.SqlCommand.InternalEndExecuteNonQuery(IAsyncResult asyncResult, Boolean isInternal, String endMethod)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryAsync(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<InternalExecuteNonQueryAsync>b__193_1(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at AssetManagement_DataAccess.SQL_DB.ExecuteNonQuery(String query, Dictionary`2 parameters) in D:\Akash\Assets_Management\AssetManagement_DataAccess\SQL_DB.cs:line 94
+2025-08-28 06:19:24 : An error occurred while executing the query: 
+                    INSERT INTO asset (  
+                        CPU_ASSET_CODE, SR_NO, DEPT, MAKE, Model_Number,  
+                        PURCHASE_UNIT, PURCHASE_DATE_YEAR, Bill_No, Bill_Date,  
+                        vendor, Ip_No, RemoteAllowed, [Host_Name], PROCESSOR,  
+                        RAM, HDD, Asset_Type, [Group], Screen_Size, INSTALLED_UNIT, HDD_Type, RAM_Type,  
+                        WARRANTY_AMC  
+                    )  
+                    VALUES (  
+                        @CPU_ASSET_CODE, @SR_NO, @DEPT, @MAKE, @Model_Number,  
+                        @PURCHASE_UNIT, @PURCHASE_DATE_YEAR, @Bill_No, @Bill_Date,  
+                        @vendor, @Ip_No, @RemoteAllowed, @Host_Name, @PROCESSOR,  
+                        @RAM, @HDD, @Asset_Type, @Group, @Screen_Size, @INSTALLED_UNIT, @HDD_Type, @RAM_Type,  
+                        @WARRANTY_AMC  
+                    );  
+
+                    INSERT INTO tbl_AddationalAsset_Info 
+                        (AssetCode, Price, UsedBy, WarrantyValidity, Warranty_Months)  
+                    VALUES 
+                        (@AssetCode, @Price, @UsedBy, @WarrantyValidity, @Warranty_Months);
+2025-08-28 06:24:58 : SQL Error: Error converting data type nvarchar to float., Query: 
+                    INSERT INTO asset (  
+                        CPU_ASSET_CODE, SR_NO, DEPT, MAKE, Model_Number,  
+                        PURCHASE_UNIT, PURCHASE_DATE_YEAR, Bill_No, Bill_Date,  
+                        vendor, Ip_No, RemoteAllowed, [Host_Name], PROCESSOR,  
+                        RAM, HDD, Asset_Type, [Group], Screen_Size, INSTALLED_UNIT, HDD_Type, RAM_Type,  
+                        WARRANTY_AMC  
+                    )  
+                    VALUES (  
+                        @CPU_ASSET_CODE, @SR_NO, @DEPT, @MAKE, @Model_Number,  
+                        @PURCHASE_UNIT, @PURCHASE_DATE_YEAR, @Bill_No, @Bill_Date,  
+                        @vendor, @Ip_No, @RemoteAllowed, @Host_Name, @PROCESSOR,  
+                        @RAM, @HDD, @Asset_Type, @Group, @Screen_Size, @INSTALLED_UNIT, @HDD_Type, @RAM_Type,  
+                        @WARRANTY_AMC  
+                    );  
+
+                    INSERT INTO tbl_AddationalAsset_Info 
+                        (AssetCode, Price, UsedBy, WarrantyValidity, Warranty_Months)  
+                    VALUES 
+                        (@AssetCode, @Price, @UsedBy, @WarrantyValidity, @Warranty_Months);, 
+ StackTrace:    at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at Microsoft.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader(Boolean isInternal, Boolean forDescribeParameterEncryption)
+   at Microsoft.Data.SqlClient.SqlCommand.InternalEndExecuteNonQuery(IAsyncResult asyncResult, Boolean isInternal, String endMethod)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryAsync(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<InternalExecuteNonQueryAsync>b__193_1(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at AssetManagement_DataAccess.SQL_DB.ExecuteNonQuery(String query, Dictionary`2 parameters) in D:\Akash\Assets_Management\AssetManagement_DataAccess\SQL_DB.cs:line 94
+2025-08-28 06:24:58 : An error occurred while executing the query: 
+                    INSERT INTO asset (  
+                        CPU_ASSET_CODE, SR_NO, DEPT, MAKE, Model_Number,  
+                        PURCHASE_UNIT, PURCHASE_DATE_YEAR, Bill_No, Bill_Date,  
+                        vendor, Ip_No, RemoteAllowed, [Host_Name], PROCESSOR,  
+                        RAM, HDD, Asset_Type, [Group], Screen_Size, INSTALLED_UNIT, HDD_Type, RAM_Type,  
+                        WARRANTY_AMC  
+                    )  
+                    VALUES (  
+                        @CPU_ASSET_CODE, @SR_NO, @DEPT, @MAKE, @Model_Number,  
+                        @PURCHASE_UNIT, @PURCHASE_DATE_YEAR, @Bill_No, @Bill_Date,  
+                        @vendor, @Ip_No, @RemoteAllowed, @Host_Name, @PROCESSOR,  
+                        @RAM, @HDD, @Asset_Type, @Group, @Screen_Size, @INSTALLED_UNIT, @HDD_Type, @RAM_Type,  
+                        @WARRANTY_AMC  
+                    );  
+
+                    INSERT INTO tbl_AddationalAsset_Info 
+                        (AssetCode, Price, UsedBy, WarrantyValidity, Warranty_Months)  
+                    VALUES 
+                        (@AssetCode, @Price, @UsedBy, @WarrantyValidity, @Warranty_Months);
+2025-08-28 06:27:41 : SQL Error: Error converting data type nvarchar to float., Query: 
+                    INSERT INTO asset (  
+                        CPU_ASSET_CODE, SR_NO, DEPT, MAKE, Model_Number,  
+                        PURCHASE_UNIT, PURCHASE_DATE_YEAR, Bill_No, Bill_Date,  
+                        vendor, Ip_No, RemoteAllowed, [Host_Name], PROCESSOR,  
+                        RAM, HDD, Asset_Type, [Group], Screen_Size, INSTALLED_UNIT, HDD_Type, RAM_Type,  
+                        WARRANTY_AMC  
+                    )  
+                    VALUES (  
+                        @CPU_ASSET_CODE, @SR_NO, @DEPT, @MAKE, @Model_Number,  
+                        @PURCHASE_UNIT, @PURCHASE_DATE_YEAR, @Bill_No, @Bill_Date,  
+                        @vendor, @Ip_No, @RemoteAllowed, @Host_Name, @PROCESSOR,  
+                        @RAM, @HDD, @Asset_Type, @Group, @Screen_Size, @INSTALLED_UNIT, @HDD_Type, @RAM_Type,  
+                        @WARRANTY_AMC  
+                    );  
+
+                    INSERT INTO tbl_AddationalAsset_Info 
+                        (AssetCode, Price, UsedBy, WarrantyValidity, Warranty_Months)  
+                    VALUES 
+                        (@AssetCode, @Price, @UsedBy, @WarrantyValidity, @Warranty_Months);, 
+ StackTrace:    at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at Microsoft.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader(Boolean isInternal, Boolean forDescribeParameterEncryption)
+   at Microsoft.Data.SqlClient.SqlCommand.InternalEndExecuteNonQuery(IAsyncResult asyncResult, Boolean isInternal, String endMethod)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryAsync(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<InternalExecuteNonQueryAsync>b__193_1(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at AssetManagement_DataAccess.SQL_DB.ExecuteNonQuery(String query, Dictionary`2 parameters) in D:\Akash\Assets_Management\AssetManagement_DataAccess\SQL_DB.cs:line 94
+2025-08-28 06:27:41 : An error occurred while executing the query: 
+                    INSERT INTO asset (  
+                        CPU_ASSET_CODE, SR_NO, DEPT, MAKE, Model_Number,  
+                        PURCHASE_UNIT, PURCHASE_DATE_YEAR, Bill_No, Bill_Date,  
+                        vendor, Ip_No, RemoteAllowed, [Host_Name], PROCESSOR,  
+                        RAM, HDD, Asset_Type, [Group], Screen_Size, INSTALLED_UNIT, HDD_Type, RAM_Type,  
+                        WARRANTY_AMC  
+                    )  
+                    VALUES (  
+                        @CPU_ASSET_CODE, @SR_NO, @DEPT, @MAKE, @Model_Number,  
+                        @PURCHASE_UNIT, @PURCHASE_DATE_YEAR, @Bill_No, @Bill_Date,  
+                        @vendor, @Ip_No, @RemoteAllowed, @Host_Name, @PROCESSOR,  
+                        @RAM, @HDD, @Asset_Type, @Group, @Screen_Size, @INSTALLED_UNIT, @HDD_Type, @RAM_Type,  
+                        @WARRANTY_AMC  
+                    );  
+
+                    INSERT INTO tbl_AddationalAsset_Info 
+                        (AssetCode, Price, UsedBy, WarrantyValidity, Warranty_Months)  
+                    VALUES 
+                        (@AssetCode, @Price, @UsedBy, @WarrantyValidity, @Warranty_Months);
+2025-08-28 06:28:32 : SQL Error: Error converting data type nvarchar to float., Query: 
+                    INSERT INTO asset (  
+                        CPU_ASSET_CODE, SR_NO, DEPT, MAKE, Model_Number,  
+                        PURCHASE_UNIT, PURCHASE_DATE_YEAR, Bill_No, Bill_Date,  
+                        vendor, Ip_No, RemoteAllowed, [Host_Name], PROCESSOR,  
+                        RAM, HDD, Asset_Type, [Group], Screen_Size, INSTALLED_UNIT, HDD_Type, RAM_Type,  
+                        WARRANTY_AMC  
+                    )  
+                    VALUES (  
+                        @CPU_ASSET_CODE, @SR_NO, @DEPT, @MAKE, @Model_Number,  
+                        @PURCHASE_UNIT, @PURCHASE_DATE_YEAR, @Bill_No, @Bill_Date,  
+                        @vendor, @Ip_No, @RemoteAllowed, @Host_Name, @PROCESSOR,  
+                        @RAM, @HDD, @Asset_Type, @Group, @Screen_Size, @INSTALLED_UNIT, @HDD_Type, @RAM_Type,  
+                        @WARRANTY_AMC  
+                    );  
+
+                    INSERT INTO tbl_AddationalAsset_Info 
+                        (AssetCode, Price, UsedBy, WarrantyValidity, Warranty_Months)  
+                    VALUES 
+                        (@AssetCode, @Price, @UsedBy, @WarrantyValidity, @Warranty_Months);, 
+ StackTrace:    at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at Microsoft.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader(Boolean isInternal, Boolean forDescribeParameterEncryption)
+   at Microsoft.Data.SqlClient.SqlCommand.InternalEndExecuteNonQuery(IAsyncResult asyncResult, Boolean isInternal, String endMethod)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryAsync(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<InternalExecuteNonQueryAsync>b__193_1(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at AssetManagement_DataAccess.SQL_DB.ExecuteNonQuery(String query, Dictionary`2 parameters) in D:\Akash\Assets_Management\AssetManagement_DataAccess\SQL_DB.cs:line 94
+2025-08-28 06:28:57 : An error occurred while executing the query: 
+                    INSERT INTO asset (  
+                        CPU_ASSET_CODE, SR_NO, DEPT, MAKE, Model_Number,  
+                        PURCHASE_UNIT, PURCHASE_DATE_YEAR, Bill_No, Bill_Date,  
+                        vendor, Ip_No, RemoteAllowed, [Host_Name], PROCESSOR,  
+                        RAM, HDD, Asset_Type, [Group], Screen_Size, INSTALLED_UNIT, HDD_Type, RAM_Type,  
+                        WARRANTY_AMC  
+                    )  
+                    VALUES (  
+                        @CPU_ASSET_CODE, @SR_NO, @DEPT, @MAKE, @Model_Number,  
+                        @PURCHASE_UNIT, @PURCHASE_DATE_YEAR, @Bill_No, @Bill_Date,  
+                        @vendor, @Ip_No, @RemoteAllowed, @Host_Name, @PROCESSOR,  
+                        @RAM, @HDD, @Asset_Type, @Group, @Screen_Size, @INSTALLED_UNIT, @HDD_Type, @RAM_Type,  
+                        @WARRANTY_AMC  
+                    );  
+
+                    INSERT INTO tbl_AddationalAsset_Info 
+                        (AssetCode, Price, UsedBy, WarrantyValidity, Warranty_Months)  
+                    VALUES 
+                        (@AssetCode, @Price, @UsedBy, @WarrantyValidity, @Warranty_Months);
+2025-08-28 06:44:46 : SQL Error: Error converting data type nvarchar to float., Query: 
+                    INSERT INTO asset (  
+                        CPU_ASSET_CODE, SR_NO, DEPT, MAKE, Model_Number,  
+                        PURCHASE_UNIT, PURCHASE_DATE_YEAR, Bill_No, Bill_Date,  
+                        vendor, Ip_No, RemoteAllowed, [Host_Name], PROCESSOR,  
+                        RAM, HDD, Asset_Type, [Group], Screen_Size, INSTALLED_UNIT, HDD_Type, RAM_Type,  
+                        WARRANTY_AMC  
+                    )  
+                    VALUES (  
+                        'gdfjdgfdjghdjikghdfihugdfikghdfikgfthf', 'fhfghfghfghfgh', 'EDP STOCK - II', 'HP', 'HP',  
+                        'AA2/25', '2025-08-28', '87234687234', '2025-08-28',  
+                        'yjhyjgytuju', '192.168.41.148', 'Yes', 'wsdawdef', 'INTEL CORE I3 2120 3.30GHZ',  
+                        '4GB', '512GB', 'C', '', '', '',
+                        '', '', 'AMC' 
+                     );  
+
+                    INSERT INTO tbl_AddationalAsset_Info 
+                        (AssetCode, Price, UsedBy, WarrantyValidity, Warranty_Months)  
+                    VALUES 
+                        ('gdfjdgfdjghdjikghdfihugdfikghdfikgfthf', '213242', 'fghfghfthy', '2025-08-28', '36');, 
+ StackTrace:    at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlCommand.InternalEndExecuteNonQuery(IAsyncResult asyncResult, Boolean isInternal, String endMethod)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryAsync(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<InternalExecuteNonQueryAsync>b__193_1(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at AssetManagement_DataAccess.SQL_DB.ExecuteNonQuery(String query, Dictionary`2 parameters)
+2025-08-28 06:44:49 : An error occurred while executing the query: 
+                    INSERT INTO asset (  
+                        CPU_ASSET_CODE, SR_NO, DEPT, MAKE, Model_Number,  
+                        PURCHASE_UNIT, PURCHASE_DATE_YEAR, Bill_No, Bill_Date,  
+                        vendor, Ip_No, RemoteAllowed, [Host_Name], PROCESSOR,  
+                        RAM, HDD, Asset_Type, [Group], Screen_Size, INSTALLED_UNIT, HDD_Type, RAM_Type,  
+                        WARRANTY_AMC  
+                    )  
+                    VALUES (  
+                        'gdfjdgfdjghdjikghdfihugdfikghdfikgfthf', 'fhfghfghfghfgh', 'EDP STOCK - II', 'HP', 'HP',  
+                        'AA2/25', '2025-08-28', '87234687234', '2025-08-28',  
+                        'yjhyjgytuju', '192.168.41.148', 'Yes', 'wsdawdef', 'INTEL CORE I3 2120 3.30GHZ',  
+                        '4GB', '512GB', 'C', '', '', '',
+                        '', '', 'AMC' 
+                     );  
+
+                    INSERT INTO tbl_AddationalAsset_Info 
+                        (AssetCode, Price, UsedBy, WarrantyValidity, Warranty_Months)  
+                    VALUES 
+                        ('gdfjdgfdjghdjikghdfihugdfikghdfikgfthf', '213242', 'fghfghfthy', '2025-08-28', '36');
+2025-08-28 07:02:25 : Asset type '' is not implemented.
+2025-08-28 07:10:21 : Asset type '' is not implemented.
+2025-08-28 07:12:34 : Asset type '' is not implemented.
+2025-08-28 07:14:23 : SQL Error: Cannot insert the value NULL into column 'AssetCode', table 'vgems2005.dbo.tbl_AddationalAsset_Info'; column does not allow nulls. INSERT fails.
+The statement has been terminated., Query: BEGIN TRANSACTION;  
+                    INSERT INTO asset (  
+                        CPU_ASSET_CODE, DEPT, MAKE, Model_Number,  
+                        PURCHASE_UNIT, PURCHASE_DATE_YEAR, Bill_No, Bill_Date,  
+                        vendor, Asset_Type, [Group], Screen_Size, INSTALLED_UNIT,  
+                        WARRANTY_AMC, USER_NAME, Employee_Code,Monitor_Make,Monitor_Asset_Code
+                    )  
+                    VALUES (  
+                        @CPU_ASSET_CODE, @DEPT, @MAKE, @Model_Number,  
+                        @PURCHASE_UNIT, @PURCHASE_DATE_YEAR, @Bill_No, @Bill_Date,  
+                        @vendor, @Asset_Type, @Group, @Screen_Size, @INSTALLED_UNIT,  
+                        @WARRANTY_AMC, @USER_NAME, @Employee_Code,@Monitor_Make,@Monitor_Asset_Code  
+                    );  
+                    INSERT INTO tbl_AddationalAsset_Info (
+                        AssetCode, Price, UsedBy, WarrantyValidity, Warranty_Months,  
+                        Screen_Resolution, Panel_Type
+                    )  
+                    VALUES (  
+                        @AssetCode, @Price, @UsedBy, @WarrantyValidity, @Warranty_Months,
+                        @Screen_Resolution, @Panel_Type
+                    );  
+                    COMMIT  
+                , 
+ StackTrace:    at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at Microsoft.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader(Boolean isInternal, Boolean forDescribeParameterEncryption)
+   at Microsoft.Data.SqlClient.SqlCommand.InternalEndExecuteNonQuery(IAsyncResult asyncResult, Boolean isInternal, String endMethod)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryAsync(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<InternalExecuteNonQueryAsync>b__193_1(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at AssetManagement_DataAccess.SQL_DB.ExecuteNonQuery(String query, Dictionary`2 parameters)
+2025-08-28 07:21:33 : An error occurred while executing the query: BEGIN TRANSACTION;  
+                    INSERT INTO asset (  
+                        CPU_ASSET_CODE, DEPT, MAKE, Model_Number,  
+                        PURCHASE_UNIT, PURCHASE_DATE_YEAR, Bill_No, Bill_Date,  
+                        vendor, Asset_Type, [Group], Screen_Size, INSTALLED_UNIT,  
+                        WARRANTY_AMC, USER_NAME, Employee_Code,Monitor_Make,Monitor_Asset_Code
+                    )  
+                    VALUES (  
+                        @CPU_ASSET_CODE, @DEPT, @MAKE, @Model_Number,  
+                        @PURCHASE_UNIT, @PURCHASE_DATE_YEAR, @Bill_No, @Bill_Date,  
+                        @vendor, @Asset_Type, @Group, @Screen_Size, @INSTALLED_UNIT,  
+                        @WARRANTY_AMC, @USER_NAME, @Employee_Code,@Monitor_Make,@Monitor_Asset_Code  
+                    );  
+                    INSERT INTO tbl_AddationalAsset_Info (
+                        AssetCode, Price, UsedBy, WarrantyValidity, Warranty_Months,  
+                        Screen_Resolution, Panel_Type
+                    )  
+                    VALUES (  
+                        @AssetCode, @Price, @UsedBy, @WarrantyValidity, @Warranty_Months,
+                        @Screen_Resolution, @Panel_Type
+                    );  
+                    COMMIT  
+                
+2025-08-28 07:37:13 : SQL Error: The column name 'UsedBy' is specified more than once in the SET clause or column list of an INSERT. A column cannot be assigned more than one value in the same clause. Modify the clause to make sure that a column is updated only once. If this statement updates or inserts columns into a view, column aliasing can conceal the duplication in your code., Query: 
+                    INSERT INTO asset (  
+                        CPU_ASSET_CODE, DEPT, MAKE, Model_Number,  
+                        PURCHASE_UNIT, PURCHASE_DATE_YEAR, Bill_No, Bill_Date,  
+                        vendor, Ip_No, RemoteAllowed, [Host_Name], PROCESSOR,  
+                        RAM, HDD, Asset_Type, [Group], Screen_Size, INSTALLED_UNIT, HDD_Type, RAM_Type,  
+                        WARRANTY_AMC  
+                    )  
+                    VALUES (  
+                        '234234drfgdfgfh', '0', '', '',  
+                        '0', '', '', '',  
+                        '', '', '', '', '',  
+                        '', '', 'C', '', '', '',
+                        '', '', '' 
+                     );  
+
+                    INSERT INTO tbl_AddationalAsset_Info 
+                        (AssetCode, Price, UsedBy, WarrantyValidity, Warranty_Months,UsedBy)  
+                    VALUES 
+                        ('234234drfgdfgfh', '', '', '', '','');, 
+ StackTrace:    at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlCommand.InternalEndExecuteNonQuery(IAsyncResult asyncResult, Boolean isInternal, String endMethod)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryAsync(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<InternalExecuteNonQueryAsync>b__193_1(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at AssetManagement_DataAccess.SQL_DB.ExecuteNonQuery(String query, Dictionary`2 parameters)
+2025-08-28 07:37:13 : An error occurred while executing the query: 
+                    INSERT INTO asset (  
+                        CPU_ASSET_CODE, DEPT, MAKE, Model_Number,  
+                        PURCHASE_UNIT, PURCHASE_DATE_YEAR, Bill_No, Bill_Date,  
+                        vendor, Ip_No, RemoteAllowed, [Host_Name], PROCESSOR,  
+                        RAM, HDD, Asset_Type, [Group], Screen_Size, INSTALLED_UNIT, HDD_Type, RAM_Type,  
+                        WARRANTY_AMC  
+                    )  
+                    VALUES (  
+                        '234234drfgdfgfh', '0', '', '',  
+                        '0', '', '', '',  
+                        '', '', '', '', '',  
+                        '', '', 'C', '', '', '',
+                        '', '', '' 
+                     );  
+
+                    INSERT INTO tbl_AddationalAsset_Info 
+                        (AssetCode, Price, UsedBy, WarrantyValidity, Warranty_Months,UsedBy)  
+                    VALUES 
+                        ('234234drfgdfgfh', '', '', '', '','');
+2025-08-28 07:38:14 : SQL Error: The column name 'UsedBy' is specified more than once in the SET clause or column list of an INSERT. A column cannot be assigned more than one value in the same clause. Modify the clause to make sure that a column is updated only once. If this statement updates or inserts columns into a view, column aliasing can conceal the duplication in your code., Query: 
+                    INSERT INTO asset (  
+                        CPU_ASSET_CODE, DEPT, MAKE, Model_Number,  
+                        PURCHASE_UNIT, PURCHASE_DATE_YEAR, Bill_No, Bill_Date,  
+                        vendor, Ip_No, RemoteAllowed, [Host_Name], PROCESSOR,  
+                        RAM, HDD, Asset_Type, [Group], Screen_Size, INSTALLED_UNIT, HDD_Type, RAM_Type,  
+                        WARRANTY_AMC  
+                    )  
+                    VALUES (  
+                        '234234drfgdfgfh', '0', '', '',  
+                        '0', '', '', '',  
+                        '', '', '', '', '',  
+                        '', '', 'C', '', '', '',
+                        '', '', '' 
+                     );  
+
+                    INSERT INTO tbl_AddationalAsset_Info 
+                        (AssetCode, Price, UsedBy, WarrantyValidity, Warranty_Months,UsedBy)  
+                    VALUES 
+                        ('234234drfgdfgfh', '', '', '', '','');, 
+ StackTrace:    at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlCommand.InternalEndExecuteNonQuery(IAsyncResult asyncResult, Boolean isInternal, String endMethod)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryAsync(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<InternalExecuteNonQueryAsync>b__193_1(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at AssetManagement_DataAccess.SQL_DB.ExecuteNonQuery(String query, Dictionary`2 parameters)
+2025-08-28 07:38:47 : An error occurred while executing the query: 
+                    INSERT INTO asset (  
+                        CPU_ASSET_CODE, DEPT, MAKE, Model_Number,  
+                        PURCHASE_UNIT, PURCHASE_DATE_YEAR, Bill_No, Bill_Date,  
+                        vendor, Ip_No, RemoteAllowed, [Host_Name], PROCESSOR,  
+                        RAM, HDD, Asset_Type, [Group], Screen_Size, INSTALLED_UNIT, HDD_Type, RAM_Type,  
+                        WARRANTY_AMC  
+                    )  
+                    VALUES (  
+                        '234234drfgdfgfh', '0', '', '',  
+                        '0', '', '', '',  
+                        '', '', '', '', '',  
+                        '', '', 'C', '', '', '',
+                        '', '', '' 
+                     );  
+
+                    INSERT INTO tbl_AddationalAsset_Info 
+                        (AssetCode, Price, UsedBy, WarrantyValidity, Warranty_Months,UsedBy)  
+                    VALUES 
+                        ('234234drfgdfgfh', '', '', '', '','');
+2025-08-28 08:50:19 : SQL Error: The column name 'UsedBy' is specified more than once in the SET clause or column list of an INSERT. A column cannot be assigned more than one value in the same clause. Modify the clause to make sure that a column is updated only once. If this statement updates or inserts columns into a view, column aliasing can conceal the duplication in your code., Query: BEGIN TRANSACTION;  
+                    INSERT INTO asset (  
+                        CPU_ASSET_CODE, DEPT, MAKE, Model_Number,  
+                        PURCHASE_UNIT, PURCHASE_DATE_YEAR, Bill_No, Bill_Date,  
+                        vendor, Asset_Type, [Group], Screen_Size, INSTALLED_UNIT,  
+                        WARRANTY_AMC, USER_NAME, Employee_Code,Monitor_Make,Monitor_Asset_Code
+                    )  
+                    VALUES (  
+                        '', '', '', '',  
+                        '', '', '', '',  
+                        '', 'M', '', '', '',  
+                        '', '', '','','GG/01/M20945'  
+                    );  
+                    INSERT INTO tbl_AddationalAsset_Info (
+                        AssetCode, Price, UsedBy, WarrantyValidity, Warranty_Months,  
+                        Screen_Resolution, Panel_Type,UsedBy
+                    )  
+                    VALUES (  
+                        '', '', '', '', '',
+                        '', '',''
+                    );  
+                    COMMIT  
+                , 
+ StackTrace:    at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlCommand.InternalEndExecuteNonQuery(IAsyncResult asyncResult, Boolean isInternal, String endMethod)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryAsync(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<InternalExecuteNonQueryAsync>b__193_1(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at AssetManagement_DataAccess.SQL_DB.ExecuteNonQuery(String query, Dictionary`2 parameters)
+2025-08-28 08:50:19 : An error occurred while executing the query: BEGIN TRANSACTION;  
+                    INSERT INTO asset (  
+                        CPU_ASSET_CODE, DEPT, MAKE, Model_Number,  
+                        PURCHASE_UNIT, PURCHASE_DATE_YEAR, Bill_No, Bill_Date,  
+                        vendor, Asset_Type, [Group], Screen_Size, INSTALLED_UNIT,  
+                        WARRANTY_AMC, USER_NAME, Employee_Code,Monitor_Make,Monitor_Asset_Code
+                    )  
+                    VALUES (  
+                        '', '', '', '',  
+                        '', '', '', '',  
+                        '', 'M', '', '', '',  
+                        '', '', '','','GG/01/M20945'  
+                    );  
+                    INSERT INTO tbl_AddationalAsset_Info (
+                        AssetCode, Price, UsedBy, WarrantyValidity, Warranty_Months,  
+                        Screen_Resolution, Panel_Type,UsedBy
+                    )  
+                    VALUES (  
+                        '', '', '', '', '',
+                        '', '',''
+                    );  
+                    COMMIT  
+                
+2025-08-28 08:56:54 : SQL Error: The column name 'UsedBy' is specified more than once in the SET clause or column list of an INSERT. A column cannot be assigned more than one value in the same clause. Modify the clause to make sure that a column is updated only once. If this statement updates or inserts columns into a view, column aliasing can conceal the duplication in your code., Query: BEGIN TRANSACTION;  
+                    INSERT INTO asset (  
+                        CPU_ASSET_CODE, DEPT, MAKE, Model_Number,  
+                        PURCHASE_UNIT, PURCHASE_DATE_YEAR, Bill_No, Bill_Date,  
+                        vendor, Asset_Type, [Group], Screen_Size, INSTALLED_UNIT,  
+                        WARRANTY_AMC, USER_NAME, Employee_Code,Monitor_Make,Monitor_Asset_Code
+                    )  
+                    VALUES (  
+                        '', '', '', '',  
+                        '', '', '', '',  
+                        '', 'M', '', '', '',  
+                        '', '', '','','GG/01/M2091233'  
+                    );  
+                    INSERT INTO tbl_AddationalAsset_Info (
+                        AssetCode, Price, UsedBy, WarrantyValidity, Warranty_Months,  
+                        Screen_Resolution, Panel_Type,UsedBy
+                    )  
+                    VALUES (  
+                        '', '', '', '', '',
+                        '', '',''
+                    );  
+                    COMMIT  
+                , 
+ StackTrace:    at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlCommand.InternalEndExecuteNonQuery(IAsyncResult asyncResult, Boolean isInternal, String endMethod)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryAsync(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<InternalExecuteNonQueryAsync>b__193_1(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at AssetManagement_DataAccess.SQL_DB.ExecuteNonQuery(String query, Dictionary`2 parameters) in D:\Akash\Assets_Management\AssetManagement_DataAccess\SQL_DB.cs:line 94
+2025-08-28 08:57:26 : An error occurred while executing the query: BEGIN TRANSACTION;  
+                    INSERT INTO asset (  
+                        CPU_ASSET_CODE, DEPT, MAKE, Model_Number,  
+                        PURCHASE_UNIT, PURCHASE_DATE_YEAR, Bill_No, Bill_Date,  
+                        vendor, Asset_Type, [Group], Screen_Size, INSTALLED_UNIT,  
+                        WARRANTY_AMC, USER_NAME, Employee_Code,Monitor_Make,Monitor_Asset_Code
+                    )  
+                    VALUES (  
+                        '', '', '', '',  
+                        '', '', '', '',  
+                        '', 'M', '', '', '',  
+                        '', '', '','','GG/01/M2091233'  
+                    );  
+                    INSERT INTO tbl_AddationalAsset_Info (
+                        AssetCode, Price, UsedBy, WarrantyValidity, Warranty_Months,  
+                        Screen_Resolution, Panel_Type,UsedBy
+                    )  
+                    VALUES (  
+                        '', '', '', '', '',
+                        '', '',''
+                    );  
+                    COMMIT  
+                
+2025-08-28 09:32:45 : SQL Error: Invalid column name 'GG'.
+Invalid column name 'M209999'., Query: BEGIN TRANSACTION;
+                    INSERT INTO asset (  
+                        CPU_ASSET_CODE, DEPT, MAKE, Model_Number,  
+                        PURCHASE_UNIT, PURCHASE_DATE_YEAR, Bill_No, Bill_Date,  
+                        vendor, Ip_No, RemoteAllowed, [Host_Name], PROCESSOR,  
+                        RAM, HDD, Asset_Type, [Group], Screen_Size, INSTALLED_UNIT, HDD_Type, RAM_Type,  
+                        WARRANTY_AMC, USER_NAME, Employee_Code, Monitor_Make, Monitor_Asset_Code
+                    )  
+                    VALUES (  
+                        'GG/01/C209999', '0', '', '',  
+                        '0', '', '', '',  
+                        '', '', '', '', '',  
+                        '', '', 'C', 'RICHA', '', '',  
+                        '', '', '', '', '',  
+                        '',  
+                        'GG/01/M209999'  
+                    );
+                
+                    INSERT INTO tbl_AddationalAsset_Info 
+                        (AssetCode, Price, UsedBy, WarrantyValidity, Warranty_Months)  
+                    VALUES 
+                        ('GG/01/C209999', '', '', '', '');
+                
+                        INSERT INTO asset (  
+                            CPU_ASSET_CODE, DEPT, MAKE, Model_Number,  
+                            PURCHASE_UNIT, PURCHASE_DATE_YEAR, Bill_No, Bill_Date,  
+                            vendor, Asset_Type, [Group], Screen_Size, INSTALLED_UNIT,  
+                            WARRANTY_AMC, USER_NAME, Employee_Code,Monitor_Asset_Code
+                        )  
+                        VALUES (  
+                            'GG/01/M209999', '0', '', '',  
+                            '0', '', '', '',  
+                            '', 'Monitor', 'RICHA', '', '',  
+                            '', '', '',GG/01/M209999  
+                        );
+                    
+                        INSERT INTO tbl_AddationalAsset_Info (
+                            AssetCode, Price, UsedBy, WarrantyValidity, Warranty_Months,  
+                            Screen_Resolution, Panel_Type
+                        )  
+                        VALUES (  
+                            'GG/01/M209999', '', '', '', '',  
+                            '', ''
+                        );
+                    COMMIT;, 
+ StackTrace:    at Microsoft.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at Microsoft.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, SqlCommand command, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at Microsoft.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at Microsoft.Data.SqlClient.SqlCommand.InternalEndExecuteNonQuery(IAsyncResult asyncResult, Boolean isInternal, String endMethod)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryInternal(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.EndExecuteNonQueryAsync(IAsyncResult asyncResult)
+   at Microsoft.Data.SqlClient.SqlCommand.<>c.<InternalExecuteNonQueryAsync>b__193_1(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location ---
+   at AssetManagement_DataAccess.SQL_DB.ExecuteNonQuery(String query, Dictionary`2 parameters)
+2025-08-28 09:34:11 : An error occurred while executing the query: BEGIN TRANSACTION;
+                    INSERT INTO asset (  
+                        CPU_ASSET_CODE, DEPT, MAKE, Model_Number,  
+                        PURCHASE_UNIT, PURCHASE_DATE_YEAR, Bill_No, Bill_Date,  
+                        vendor, Ip_No, RemoteAllowed, [Host_Name], PROCESSOR,  
+                        RAM, HDD, Asset_Type, [Group], Screen_Size, INSTALLED_UNIT, HDD_Type, RAM_Type,  
+                        WARRANTY_AMC, USER_NAME, Employee_Code, Monitor_Make, Monitor_Asset_Code
+                    )  
+                    VALUES (  
+                        'GG/01/C209999', '0', '', '',  
+                        '0', '', '', '',  
+                        '', '', '', '', '',  
+                        '', '', 'C', 'RICHA', '', '',  
+                        '', '', '', '', '',  
+                        '',  
+                        'GG/01/M209999'  
+                    );
+                
+                    INSERT INTO tbl_AddationalAsset_Info 
+                        (AssetCode, Price, UsedBy, WarrantyValidity, Warranty_Months)  
+                    VALUES 
+                        ('GG/01/C209999', '', '', '', '');
+                
+                        INSERT INTO asset (  
+                            CPU_ASSET_CODE, DEPT, MAKE, Model_Number,  
+                            PURCHASE_UNIT, PURCHASE_DATE_YEAR, Bill_No, Bill_Date,  
+                            vendor, Asset_Type, [Group], Screen_Size, INSTALLED_UNIT,  
+                            WARRANTY_AMC, USER_NAME, Employee_Code,Monitor_Asset_Code
+                        )  
+                        VALUES (  
+                            'GG/01/M209999', '0', '', '',  
+                            '0', '', '', '',  
+                            '', 'Monitor', 'RICHA', '', '',  
+                            '', '', '',GG/01/M209999  
+                        );
+                    
+                        INSERT INTO tbl_AddationalAsset_Info (
+                            AssetCode, Price, UsedBy, WarrantyValidity, Warranty_Months,  
+                            Screen_Resolution, Panel_Type
+                        )  
+                        VALUES (  
+                            'GG/01/M209999', '', '', '', '',  
+                            '', ''
+                        );
+                    COMMIT;

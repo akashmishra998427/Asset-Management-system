@@ -1,0 +1,438 @@
+﻿@{
+    ViewData["Title"] = "MachineMaster";
+    Layout = "~/Views/Shared/ItLayout.cshtml";
+}
+<link rel="stylesheet" href="~/jquery/jQueryUi.css" />
+<script src="~/jquery/jQueryUi.js"></script>
+<link href="~/css/summrycss.css" rel="stylesheet" />
+<link href="~/css/MachineMasterCss.css" rel="stylesheet" /> 
+<style>
+    .select2-container--open {
+        z-index: 9999999
+    }
+</style>
+<div class="container mt-4 bg-light">
+    <div class="row text-center p-3">
+        <h2 class="">Machine Master</h2>
+    </div>
+    <input type="hidden" id="hdnid" />
+    <form id="machineMasterForm">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label for="txtMachineCode" class="form-label">Machine Code</label>
+                <input type="text" id="txtMachineCode" name="machineCode" class="form-control" readonly/>
+            </div>
+            <div class="col-md-4">
+                <label for="machineSerialNo" class="form-label">Machine Serial No</label>
+                <input type="text" id="machineSerialNo" name="machineSerialNo" class="form-control" oninput="GetDataWithCondition('machineSerialNo','GetMachineSrNo')"/>
+            </div>
+            <div class="col-md-4">
+                <label for="txtMachineType" class="form-label">Machine Type</label>
+                <input type="text" id="txtMachineType" name="txtMachineType" class="form-control" oninput="GetDataWithCondition('txtMachineType','GetMachineType')"/>
+            </div>
+            <div class="col-md-4">
+                <label for="txtMake" class="form-label">Make</label>
+                <input type="text" id="txtMake" name="make" class="form-control" oninput="GetDataWithCondition('txtMake','GetMachineMake')"/>
+            </div>
+
+            <div class="col-md-4">
+                <label for="ddlPremises" class="form-label">Premises</label>
+                <select id="ddlPremises" class="form-select" onchange="GetLineData()">
+                    <option value="">Select Premises</option>
+                </select>
+            </div> 
+
+            <div class="col-md-4">
+                <label for="ddlLine" class="form-label">Line</label>
+                <select id="ddlLine" class="form-select">
+                    <option value="">Select Line</option>
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label for="txtModelNo" class="form-label">Model No</label>
+                <input type="text" id="txtModelNo" name="txtModelNo" class="form-control" oninput="GetDataWithCondition('txtModelNo','GetModelNo')"/>
+            </div>
+
+            <div class="col-md-4 d-flex align-items-center mt-4">
+                <div class="d-flex mt-4">
+                    <label class="fw-bold mt-2">Active Status</label>
+                    <div class="toggle-container">
+                        <div class="toggle-switch" style="margin-left: 25px;" id="activeToggle" onclick="toggleActive()">
+                            <div class="toggle-slider"></div>
+                        </div>
+                        <label id="toggleLabel">Active</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-4 row pb-4">
+            <div class="col-md-8"></div>
+            <div class="col-md-4 d-flex justify-content-end gap-3">
+                <button type="button" class="btn btn-secondary" onclick="goBack()">Back</button>
+                <button type="submit" class="btn btn-primary" onclick="ManageMachineData()">
+                    <span id="btnSave">Save</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<script>
+    let $toggle, $label;
+    let ApiURL = `@ViewBag.ApiBasurl`
+    
+    $(function () {
+        var urlParams = new URLSearchParams(window.location.search);
+        var Data = urlParams.get("ID");
+        $toggle = $('#activeToggle'); 
+        $label = $('#toggleLabel');
+        $label.text('Active');
+        $label.css('color', '#27ae60');
+        if (Data != null) {
+            SetMachineData(Data);
+           $('#btnSave').text('Update')
+        }
+        else {
+            GetCode();
+            GetPremisesData();
+        }
+    });
+
+    function toggleActive() {
+        $toggle.toggleClass('inactive');
+
+        if ($toggle.hasClass('inactive')) {
+            $label.text('Inactive');
+            $label.css('color', '#e74c3c');
+        } else {
+            $label.text('Active');
+            $label.css('color', '#27ae60');
+        }
+    }
+
+    function GetCode() {
+        $.ajax({
+            url: `/ProductionMachine/GetCode`,
+            type: "GET",
+            dataType: "json",
+            contentType: 'application/json',
+            success: function (data) {
+               $.each(data, function (i, v) {
+                   $('#txtMachineCode').val(v.MachineCode); 
+               });
+            },
+            error: function (err) {
+                console.error("Error occurred while fetching machine code:", err);
+            }
+        });
+    }
+
+    function SetMachineData(Data) {
+        
+        if (!Data) {
+            console.error("Data parameter is required");
+            Alerts('Invalid data provided', 'error');
+            return;
+        }
+
+        $.ajax({
+            url: '/ProductionMachine/SetMachineData',
+            data: JSON.stringify({ Data: Data }),
+            dataType: "json",
+            contentType: 'application/json',
+            type: "POST",
+            success: function (res) {
+               
+                if (!res || !Array.isArray(res) || res.length === 0) {
+                    console.error("Invalid response data");
+                    Alerts('No machine data found', 'error');
+                    return;
+                }
+
+                $.each(res, function (i, v) {
+                    
+                    $('#txtMachineType').val(v.Machine_Type || '');
+                    $('#txtModelNo').val(v.ModelNo || '');
+                    $('#txtMake').val(v.Make || '');
+                    $('#machineSerialNo').val(v.MachineSrNo || '');
+                    $('#txtMachineCode').val(v.MachineCode || '');
+                    $('#hdnid').val(v.id || '');
+
+                    
+                    if (v.Active === 1 || v.Active === true || v.Active === 'true') {
+                        $toggle.removeClass('inactive'); 
+                        $label.text('Active');
+                        $label.css('color', '#27ae60');
+                    } else {
+                        $toggle.addClass('inactive');
+                        $label.text('Inactive');
+                        $label.css('color', '#e74c3c');
+                    }
+
+                    
+                    GetPremisesData(v.CompCode, v.LineId);
+                });
+
+                
+                $('#btnSave').text('Update');
+            },
+            error: function (err) {
+                console.error("Error occurred while fetching machine data:", err);
+                Alerts('Failed to load machine data. Please try again.', 'error');
+            }
+        });
+    }
+
+    function GetPremisesData(Selected,SelectedID) {
+        $.ajax({
+            url:'/ProductionMachine/GetPremises',
+            dataType: "json",
+            type: "GET",
+            contentType:"application/json",
+            success: function (data) {
+                $('#ddlPremises').empty();
+                var Options = '<option value="">--Please Select--</option>';
+                $.each(data, function (index, item) {
+                    Options += '<option value="' + item.CompCode + '">' + item.N_CompCode + '</option>';
+                });
+                $('#ddlPremises').append(Options);
+                if (Selected != null && Selected != undefined && Selected !== "") {
+                    $('#ddlPremises option').each(function () {
+                        if ($(this).val() === Selected) {
+                            $(this).prop('selected', true);
+                        }
+                    });
+                    GetLineData(SelectedID);
+                }
+               $('#ddlPremises').select2()
+            },
+            error: function (xhr, status, error) {
+                console.log("Error fetching data: " + error);
+            }
+        });
+    }
+
+    function GetDataWithCondition(TXTID, Action) {
+        var Value = $('#' + TXTID).val();
+        if (!Value || Value.length < 1) {
+            $('#' + TXTID + '_suggestions').remove();
+            return;
+        }
+        $.ajax({
+            url: '/ProductionMachine/GetAutoCompleteData',
+            data: JSON.stringify({ Action: Action, Value: Value }),
+            dataType: "json",
+            type: "POST",
+            contentType: "application/json",
+            success: function (res) {
+                $('#' + TXTID + '_suggestions').remove();
+                var suggestions = [];
+                if (Array.isArray(res)) {
+                    $.each(res, function (i, v) {
+                        if (v.NAME) {
+                            suggestions.push(v.NAME);
+                        }
+                    });
+                }
+                if (suggestions.length > 0) {
+                    var suggestionHtml = '<ul id="' + TXTID + '_suggestions" class="autocomplete-suggestions">';
+                    $.each(suggestions, function(index, item) {
+                        suggestionHtml += '<li class="suggestion-item" data-value="' + item + '">' + item + '</li>';
+                    });
+                    suggestionHtml += '</ul>';
+                    var $input = $('#' + TXTID);
+                    var position = $input.position();
+                    var $dropdown = $(suggestionHtml).css({
+                        position: 'absolute',
+                        top: position.top + $input.outerHeight(),
+                        left: position.left,
+                        width: $input.outerWidth(),
+                        'z-index': 1,
+                        'background': 'white',
+                        'border': '1px solid #ccc',
+                        'max-height': '200px',
+                        'overflow-y': 'auto',
+                        'list-style': 'none',
+                        'padding': 0,
+                        'margin': 0
+                    });
+                    $input.after($dropdown);
+                    $('.suggestion-item').click(function() {
+                        var selectedValue = $(this).data('value');
+                        $('#' + TXTID).val(selectedValue);
+                        $('#' + TXTID + '_suggestions').remove();
+                    });
+                }
+            },
+            error: function (err) {
+                console.error("Error occurred while fetching autocomplete data", err);
+            }
+        });
+    }
+
+    function GetLineData(SelectedID) {
+        var CompCode = $('#ddlPremises option:selected').val();
+        if (!CompCode) {
+            console.warn("CompCode is not selected.");
+            return;
+        }
+        $.ajax({
+            url: `/ProductionMachine/GetLineNo`,
+            type: "POST",
+            dataType: "json",
+            contentType: "application/json",
+            data: JSON.stringify({
+                CompCode: CompCode,
+                Tv_Floor: "",
+                Floor: "",
+                Department: "sewing"
+            }),
+            success: function (data) {
+                $('#ddlLine').empty();
+                var options = '<option value="0">--Please Select--</option>';
+                $.each(data, function (index, item) {
+                    options += '<option value="' + item.id + '">' + item.lineNo + '</option>';
+                });
+                $('#ddlLine').append(options);
+
+                if (SelectedID) {
+                    $('#ddlLine').val(SelectedID);
+                }
+                $('#ddlLine').select2();
+            },
+            error: function (xhr, status, error) {
+                console.error("Error fetching line data:", error);
+            }
+        });
+    }
+
+    function ManageMachineData() {
+        event.preventDefault();
+        
+        if($('#txtMachineCode').val()=='')
+        {
+           Alerts('Please Fill Machine Code','error')
+           return
+        } 
+        else if($('#machineSerialNo').val()=='')
+        {
+           Alerts('Please Fill MachineSrNo','error')
+           return
+        }
+        else if($('#txtMachineType').val()=='')
+        {
+           Alerts('Please Fill MachineType','error')
+           return
+        }
+        else if($('#txtMake').val()=='')
+        {
+           Alerts('Please Fill Make','error')
+           return
+        }
+        else if($('#ddlPremises').val()=='')
+        {
+           Alerts('Plesae Select Premises','error')
+           return
+        }
+        else if($('#ddlLine').val()=='')
+        {
+           Alerts('Plesae Select Line','error')
+           return
+        }
+        else if($('#txtModelNo').val()=='')
+        {
+           Alerts('Please Fill ModelNo','error')
+           return
+        }
+
+        let Active;
+        if($label.text() == 'Active') {
+            Active = true;
+        } else {
+            Active = false;
+        }
+        const Payload = {
+            CompCode: $('#ddlPremises option:selected').val(),
+            LineID: $('#ddlLine option:selected').val(),
+            ModelNo: $('#txtModelNo').val(),
+            MachineSrNo: $('#machineSerialNo').val(), 
+            MachineID: $('#hdnid').val(),
+            Premises: $('#ddlPremises option:selected').text(), 
+            MachineType: $('#txtMachineType').val(),
+            Make: $('#txtMake').val(),
+            MachineCode: $('#txtMachineCode').val(),
+            Department: "sewing", 
+            UserName: sessionStorage.getItem('UserName'),
+            Active: Active
+        };
+        $.ajax({
+            url: "/ProductionMachine/ManageMachineData",
+            dataType: "json",
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(Payload),
+            success: function (res) {
+             
+                if(res.message.includes('Machine already exists.') && res.success == false)
+                {
+                     Alerts(res.result,'error')
+                }
+                else if(res.message.includes('Operation completed successfully.') && res.success == true)
+                {
+                    AlertsWithRedirect(res.result,'success','/ProductionMachine/ViewMachineMaster')
+                }
+                else{
+                     Alerts(res.result,'error')
+                }
+            },
+            error: function (xhr, status, error) {
+                $('#wait').hide();
+                console.error("AJAX Error:", xhr.responseText);
+                fireSweetAlert(res.responseText,'error')
+            }
+        });
+    }
+
+    function goBack() {
+        fireSweetAlert('Are you sure you want to go back? Any unsaved changes will be lost.', 'warning')
+        .then((result) => {
+            if (result.isConfirmed) {
+                window.history.back();
+            }
+        });
+    }
+
+    function fireSweetAlert(message, icon) {
+        return Swal.fire({
+            text: message,
+            icon: icon,
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel'
+        });
+    }
+
+   function Alerts(Text,Icon)
+   {
+      Swal.fire({
+        text: `${Text}`,
+        icon: `${Icon}`
+      });
+   }
+   
+   function AlertsWithRedirect(Text, Icon, redirectUrl) {
+       Swal.fire({
+           text: `${Text}`,
+           icon: `${Icon}`,
+           confirmButtonText: "OK"
+       }).then((result) => {
+           if (result.isConfirmed) {
+               window.location.href = redirectUrl;
+           }
+       });
+   }
+
+</script>
+

@@ -1,0 +1,1404 @@
+﻿@{
+	ViewData["Title"] = "RegisterAsset";
+	Layout = "~/Views/Shared/ItLayout.cshtml";
+}
+<link href="~/css/AssetRegistration.css" rel="stylesheet" />
+<script src="~/js/assetconfig.js"></script>
+ 
+<div class="container-fluid py-4">
+	<div class="row justify-content-center">
+		<div class="col-12 col-xl-11">
+			<div class="">
+				<div class="card-header">
+					<div class="row">
+						<div class="col-md-3">
+							<h3 class="mb-0">
+								<i class="fas fa-laptop me-2"></i>Asset Registration
+							</h3>
+						</div>
+						<div class="col-md-3">
+						</div>
+
+						<div class="col-md-6 d-flex justify-content-end" style="gap:10px">
+							<div class="col-sm-3 d-flex">
+								<select class="form-select" id="assetTypeSelect" name="assetType">
+								</select>
+							</div>
+							<button class="btn btn-primary" onclick="ShowModalValidation()">
+								<i class="fas fa-plus me-2"></i><span>Attach Invoice</span>
+							</button>
+							<button type="button" class="btn btn-warning" id="btnEdit" onclick="BindModalData()">
+								<i class="fa-solid fa-pen-to-square"></i> Edit
+							</button>
+						</div>
+					</div>
+					<div class="form-category-tabs">
+						<ul class="nav nav-tabs" id="formCategoryTabs" role="tablist">
+							<li class="nav-item" role="presentation">
+								<button class="nav-link active" id="basic-tab" data-bs-toggle="tab" data-bs-target="#basic-info" type="button" role="tab" aria-controls="basic-info" aria-selected="true" onclick="HideTabs('purchase-info','network-info','warranty-info','specific-info','basic-info','Monitor-info')">
+									<i class="fas fa-info-circle me-2"></i>Basic Information
+								</button>
+							</li>
+							<li class="nav-item" role="presentation" id="MonitorHeaderTab" style="display: none;">
+								<button class="nav-link" id="Monitor-tab" data-bs-toggle="tab" data-bs-target="#Monitor-info" type="button" role="tab" aria-controls="Monitor-info" aria-selected="false" onclick="HideTabs('basic-info','network-info','warranty-info','specific-info','Monitor-info','purchase-info')">
+									<i class="fas fa-desktop me-2"></i>Monitor Information
+								</button>
+							</li>
+							<li class="nav-item" role="presentation">
+								<button class="nav-link" id="purchase-tab" data-bs-toggle="tab" data-bs-target="#purchase-info" type="button" role="tab" aria-controls="purchase-info" aria-selected="false" onclick="HideTabs('basic-info','network-info','warranty-info','specific-info','purchase-info','Monitor-info')">
+									<i class="fas fa-shopping-cart me-2"></i>Purchase Information
+								</button>
+							</li>
+							<li class="nav-item" role="presentation">
+								<button class="nav-link" id="network-tab" data-bs-toggle="tab" data-bs-target="#network-info" type="button" role="tab" aria-controls="network-info" aria-selected="false" onclick="HideTabs('basic-info','purchase-info','warranty-info','specific-info','network-info','Monitor-info')">
+									<i class="fas fa-network-wired me-2"></i>Network Information
+								</button>
+							</li>
+							<li class="nav-item" role="presentation">
+								<button class="nav-link" id="warranty-tab" data-bs-toggle="tab" data-bs-target="#warranty-info" type="button" role="tab" aria-controls="warranty-info" aria-selected="false" onclick="HideTabs('basic-info','network-info','purchase-info','specific-info','warranty-info','Monitor-info')">
+									<i class="fas fa-shield-alt me-2"></i>Warranty & Support
+								</button>
+							</li>
+							<li class="nav-item" role="presentation">
+								<button class="nav-link" id="specific-tab" data-bs-toggle="tab" data-bs-target="#specific-info" type="button" role="tab" aria-controls="specific-info" aria-selected="false" onclick="HideTabs('basic-info','network-info','warranty-info','purchase-info','specific-info','Monitor-info')">
+									<i class="fas fa-cogs me-2"></i>Asset Specific
+								</button>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="card-body">
+					<div class="tab-content" id="formCategoryTabsContent">
+						<form id="dynamicAssetForm">
+							<div class="tab-pane fade show active" id="basic-info" role="tabpanel" aria-labelledby="basic-tab">
+								<div class="form-section">
+									<div class="row"> 
+										<div class="col-sm-2 d-flex justify-content-center align-items-center g-3 d-none" id="monitorContainer">
+											<label for="monitor" class="form-label">With Monitor</label>
+											<input type="checkbox" value="monitor" id="monitor" class="form-check" style="margin-left: 20px;" />
+										</div>
+									</div>
+									<div class="row">
+
+										<div class="col-md-4 mb-3">
+											<label for="asset_code" class="form-label required">Asset Code</label>
+											<input type="text" class="form-control" id="asset_code" name="asset_code" required>
+										</div>
+
+										<div class="col-md-4 mb-3">
+											<label for="User_Name" class="form-label required">User Name</label>
+											<input type="text" class="form-control" id="User_Name" name="User_Name" required readonly>
+										</div>
+
+										<div class="col-md-4 mb-3">
+											<label for="Group" class="form-label required">Group</label>
+											<input type="text" class="form-control" id="Group" name="Group" value="RICHA" readonly required>
+										</div> 
+
+										<div class="col-md-4 mb-3">
+											<label for="Employee_Code" class="form-label required">Employee Code</label>
+											<input type="text" class="form-control" id="Employee_Code" name="Employee_Code" required readonly>
+										</div> 
+
+										<div class="col-md-4 mb-3">
+											<label for="CPU_V" class="form-label required">Cpu V</label>
+											<input type="text" class="form-control" id="CPU_V" name="CPU_V" required>
+										</div>
+
+										<div class="col-md-4 mb-3">
+											<label for="department" class="form-label required">Department</label>
+											<input type="text" class="form-control" id="department" name="department" value="EDP STOCK" readonly required>
+										</div>
+										
+										<div class="col-md-4 mb-3">
+											<label for="SRNO" class="form-label required">Sr No</label>
+											<input type="text" class="form-control" id="SRNOAsset" name="SRNO" required>
+										</div>
+
+										<div class="col-md-4 mb-3">
+											<label for="make" class="form-label required">Make</label>
+											<input type="text" class="form-control" id="make" required>
+										</div>
+
+										<div class="col-md-4 mb-3">
+											<label for="model_no" class="form-label required">Model No</label>
+											<input type="text" class="form-control" id="model_no" required>
+										</div>
+										
+										<div class="col-md-4 mb-3">
+											<label for="Desktop_Laptop_Server" class="form-label required">Desktop Laptop Server</label>
+											<input type="text" class="form-control" id="Desktop_Laptop_Server" required>
+										</div>
+									</div> 
+								</div>
+								<div class="d-flex justify-content-end mt-3 pb-3">
+									<button type="button" class="btn btn-primary" onclick="goToNextTab('basic-tab')">
+										<i class="fas fa-arrow-right me-2"></i>Next
+									</button>
+								</div>
+							</div>
+
+							<div class="tab-pane fade" id="Monitor-info" role="tabpanel" aria-labelledby="Monitor-tab">
+								<div class="form-section"> 
+									<div class="row">
+										<div class="col-md-4 mb-3">
+											<label for="monitor_asset_code" class="form-label">Monitor Asset Code</label>
+											<input type="text" class="form-control" id="monitor_asset_code" name="monitor_asset_code">
+										</div>
+										 
+										<div class="col-md-4 mb-3">
+											<label class="form-label" for="MonitorType"> Monitor type </label>
+											<input type="text" class="form-control" id="MonitorType" name="MonitorType" />
+										</div> 
+
+										<div class="col-md-4 mb-3">
+											<label for="MonitorMake" class="form-label">Monitor Make</label>
+											<input type="text" class="form-control" id="MonitorMake" name="MonitorMake" />
+										</div> 
+
+										<div class="col-md-4">
+											<label for="MonitorSrNo" class="form-label">Monitor Serial Number</label>
+											<input type="text" class="form-control" id="MonitorSrNo" name="MonitorSrNo" />
+										</div>
+										<div class="col-md-4 mb-3">
+											<label for="screen_size" class="form-label">Screen Size</label>
+											<input type="text" class="form-control" id="screen_size" name="screen_size">
+										</div>
+										 
+									</div>
+								</div>
+								<div class="d-flex justify-content-end mt-3 pb-3">
+									<button type="button" class="btn btn-primary" onclick="goToNextTab('Monitor-tab')">
+										<i class="fas fa-arrow-right me-2"></i>Next
+									</button>
+								</div>
+							</div>
+
+							<div class="tab-pane fade" id="purchase-info" role="tabpanel" aria-labelledby="purchase-tab">
+								<div class="form-section"> 
+									<div class="row">
+										<div class="col-md-4 mb-3">
+											<label for="purchase_unit" class="form-label required">Purchase Unit</label>
+											<select id="purchase_unit" class="form-select"></select>
+										</div>
+
+										<div class="col-md-4 mb-3">
+											<label for="installation_location" class="form-label required">Install Unit</label>
+											<select id="installation_location" class="form-select"></select>
+										</div>
+
+										<div class="col-md-4 mb-3">
+											<label for="bill_no" class="form-label">Bill No</label>
+											<input type="text" class="form-control" id="bill_no" name="bill_no">
+										</div>
+
+									</div>
+									<div class="row">
+
+										<div class="col-md-4 mb-3">
+											<label for="bill_date" class="form-label">Purchase Date</label>
+											<input type="date" class="form-control" id="bill_date" name="bill_date">
+										</div>
+										
+										<div class="col-md-4 mb-3">
+											<label for="purchase_year" class="form-label">Purchase Year</label>
+											<input type="text" class="form-control" id="purchase_year" name="purchase_year">
+										</div>
+
+										<div class="col-md-4 mb-3">
+											<label for="vendor_name" class="form-label">Vendor Name</label>
+											<input type="text" class="form-control" id="vendor_name" name="vendor_name">
+										</div>
+										
+									</div>
+									<div class="row">
+										
+										<div class="col-md-4 mb-3">
+											<label for="price" class="form-label">Price</label>
+											<input type="number" class="form-control" id="price" name="price" step="1000">
+										</div>
+									</div> 
+								</div>
+								<div class="d-flex justify-content-end mt-3 pb-3">
+									<button type="button" class="btn btn-primary" onclick="goToNextTab('purchase-tab')">
+										<i class="fas fa-arrow-right me-2"></i>Next
+									</button>
+								</div>
+							</div>
+
+							<div class="tab-pane fade" id="network-info" role="tabpanel" aria-labelledby="network-tab">
+								<div class="form-section" id="networkSection">
+									<div class="row">
+										<div class="col-md-4 mb-3">
+											<label for="ip_address" class="form-label">IP Address</label>
+											<input type="text" class="form-control" id="ip_address" name="ip_address">
+										</div>
+										<div class="col-md-4 mb-3">
+											<label for="remote_allowed" class="form-label">Remote Allowed</label>
+											<select class="form-select" id="remote_allowed" name="remote_allowed">
+												<option value="">Select Option</option>
+												<option value="YES">YES</option>
+												<option value="NO">NO</option>
+											</select>
+										</div>
+										<div class="col-md-4 mb-3">
+											<label for="host_name" class="form-label">Host Name</label>
+											<input type="text" class="form-control" id="host_name" name="host_name">
+										</div>
+									</div>
+								</div>
+								<div class="d-flex justify-content-end mt-3 pb-3">
+									<button type="button" class="btn btn-primary" onclick="goToNextTab('network-tab')">
+										<i class="fas fa-arrow-right me-2"></i>Next
+									</button>
+								</div>
+							</div>
+
+							<div class="tab-pane fade" id="warranty-info" role="tabpanel" aria-labelledby="warranty-tab">
+								<div class="form-section" id="warrantySection"> 
+									<div class="row">
+										<div class="col-md-4 mb-3">
+											<label for="warranty_type" class="form-label">Warranty Type</label>
+											<select class="form-select" id="warranty_type" name="warranty_type">
+												<option value="">Select Type</option>
+												<option value="WARRANTY">WARRANTY</option>
+												<option value="AMC">AMC</option>
+												<option value="BOTH">BOTH</option>
+											</select>
+										</div>
+										<div class="col-md-4 mb-3">
+											<label for="valid_upto" class="form-label">Valid Up To</label>
+											<input type="date" class="form-control" id="valid_upto" name="valid_upto">
+										</div>
+										<div class="col-md-4 mb-3">
+											<label for="months" class="form-label">Months</label>
+											<input type="text" class="form-control" id="months" name="months">
+										</div>
+									</div>
+								</div>
+								<div class="d-flex justify-content-end mt-3 pb-3">
+									<button type="button" class="btn btn-primary" onclick="goToNextTab('warranty-tab')">
+										<i class="fas fa-arrow-right me-2"></i>Next
+									</button>
+								</div>
+							</div>
+
+							<div class="tab-pane fade" id="specific-info" role="tabpanel" aria-labelledby="specific-tab">
+								<div class="form-section" id="specificFields">
+									<h4> Asset Specific Information </h4>
+									<div class="row" id="specificFieldsRow">
+									</div>
+								</div>
+								<div class="d-flex justify-content-end mt-3 pb-3">
+									<button type="button" class="btn btn-success" style="padding-left:20px; padding-right:20px" id="btnSaveAndUpdate">
+										Save
+									</button>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="EditModal" tabindex="-1" aria-labelledby="EditModal" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered filterModal" style="max-width: 85vw;">
+		<div class="modal-content" style="display: flex; flex-direction: column;">
+
+			<div class="modal-header d-flex justify-content-end" style="padding-bottom:0px">
+
+				<div>
+					<button type="button" id="BtnClose" class="btn btn-danger rounded  " data-bs-dismiss="modal" aria-label="Close">
+						<i class="fas fa-times"></i>  <span class="">Close</span>
+					</button>
+				</div>
+			</div>
+
+			<div class="modal-body" style="flex-grow: 1; overflow-y: auto; height: 700px; padding-top:0px">
+				<div class="table-responsive" id="tblContainer">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="InvoiceModal" tabindex="-1" aria-labelledby="InvoiceModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered modal-lg" style="max-width: 50%;">
+		<div class="modal-content">
+			<div class="modal-header bg-light d-flex justify-content-between">
+				<h5 class="modal-title fw-bold" id="tbtDetailDetailModal">Invoice Details <span id="AssetCode"></span></h5>
+				<div class="d-flex gap-3">
+					<button type="button" id="" class="btn btn-outline-danger rounded" data-bs-dismiss="modal" aria-label="Close" style="font-size:24px">
+						<i class="fas fa-times"></i>
+					</button>
+				</div>
+			</div>
+			<div class="modal-body">
+
+				<div class="mb-3">
+					<label for="txtBillNo" class="form-label">Bill No <sub class="text-danger">*</sub></label>
+					<input type="text" class="form-control" id="txtBillNo" placeholder="Enter Invoice Number" />
+				</div>
+
+				<div class="mb-3">
+					<label for="BillDate" class="form-label">Bill Date <sub class="text-danger">*</sub></label>
+					<input type="date" class="form-control" id="BillDate" />
+				</div>
+				<div class="mb-3">
+					<label for="BillDate" class="form-label">File Name <sub class="text-danger">*</sub></label>
+					<input type="text" class="form-control" id="txtFileName" />
+				</div>
+
+				<div class="mb-3">
+					<label class="form-label">Upload Invoice <sub class="text-danger">*</sub> </label><br />
+					<label class="custom-upload" onclick="triggerUpload()">
+						<i class="fas fa-upload me-2"></i>Browse
+					</label>
+					<input type="file" id="fileInput" class="d-none" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" multiple />
+				</div>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" onclick="CloseModal()">
+					<i class="fas fa-save me-1"></i> Save Invoice
+				</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script>
+	let authToken = '';
+	let $valid_upto = $('#valid_upto') 
+	let InvoiceName ;
+	  
+	let currentAssetType = 'C';
+
+	function goToNextTab(currentTab) {
+
+		let $AssetCode = $('#asset_code').val()
+		if(!$AssetCode)
+		{
+			fireSweetAlert("You Can't Swithch Tab Without Filling Asset Code",'error')
+			return
+		}
+
+		const tabSequence = ['basic-tab', 'Monitor-tab', 'purchase-tab', 'network-tab', 'warranty-tab', 'specific-tab'];
+		const currentIndex = tabSequence.indexOf(currentTab);
+
+		if (currentIndex >= 0 && currentIndex < tabSequence.length - 1) {
+			let nextTabIndex = currentIndex + 1;
+			let nextTab = tabSequence[nextTabIndex];
+
+			while (nextTabIndex < tabSequence.length - 1) {
+				const tabElement = $(`#${nextTab}`).parent();
+				if (tabElement.is(':visible') && !tabElement.hasClass('d-none') && tabElement.css('display') !== 'none') {
+					break;
+				}
+				nextTabIndex++;
+				if (nextTabIndex < tabSequence.length) {
+					nextTab = tabSequence[nextTabIndex];
+				}
+			}
+
+			if (nextTabIndex < tabSequence.length) {
+				const tabElement = $(`#${nextTab}`).parent();
+				if (tabElement.is(':visible') && !tabElement.hasClass('d-none') && tabElement.css('display') !== 'none') {
+					$(`#${nextTab}`).click();
+				}
+			}
+		}
+	}
+	 
+	function updateFormFields(assetType) {
+		const config = window.assetConfigs[assetType];
+		if (!config) {
+			console.log('No configuration found for asset type:', assetType);
+			return;
+		}
+
+		const $specificFieldsRow = $('#specificFieldsRow');
+		$specificFieldsRow.empty();
+
+		config.specificFields.forEach(field => {
+			const $colDiv = $('<div>').addClass('col-md-4 mb-3');
+			const $label = $('<label>').addClass('form-label').attr('for', field.id).text(field.label);
+			if (field.required) $label.addClass('required');
+
+			let $input;
+			if (field.type === 'select') {
+				$input = $('<select>').addClass('form-select');
+				$input.append($('<option>').val('').text('Select Option'));
+
+				field.options.forEach(option => {
+					$input.append($('<option>').val(option).text(option));
+				});
+			} else {
+				$input = $('<input>')
+					.attr('type', field.type)
+					.addClass('form-control');
+				if (field.type === 'number') {
+					$input.attr('step', '0.01');
+				}
+			}
+
+			$input.attr('id', field.id).attr('name', field.id);
+			if (field.required) {
+				$input.prop('required', true);
+			}
+
+			$colDiv.append($label).append($input);
+			$specificFieldsRow.append($colDiv);
+		});
+
+		const $networkTab = $('#network-tab').parent();
+		const $warrantyTab = $('#warranty-tab').parent();
+		const $specificTab = $('#specific-tab').parent();
+
+		if (config.showNetwork) {
+			$networkTab.show().css('display', 'block');
+		} else {
+			$networkTab.hide().css('display', 'none');
+			if ($('#network-tab').hasClass('active')) {
+				$('#basic-tab').click();
+			}
+		}
+
+		if (config.showWarranty) {
+			$warrantyTab.show().css('display', 'block');
+		} else {
+			$warrantyTab.hide().css('display', 'none');
+			if ($('#warranty-tab').hasClass('active')) {
+				$('#basic-tab').click();
+			}
+		}
+
+		if (config.specificFields.length > 0) {
+			$specificTab.show().css('display', 'block');
+		} else {
+			$specificTab.hide().css('display', 'none');
+			if ($('#specific-tab').hasClass('active')) {
+				$('#basic-tab').click();
+			}
+		}
+
+		currentAssetType = assetType;
+		attachDynamicSuggestionsForAssetType(assetType);
+	}	  
+
+	function handleMonitorTabVisibility() {
+		const isComputerSelected = $('#assetTypeSelect').val() === 'C';
+		const isMonitorChecked = $('#monitor').is(':checked');
+
+		if (isComputerSelected && isMonitorChecked) {
+			$('#MonitorHeaderTab').show().css('display', 'block');
+		} else {
+			$('#MonitorHeaderTab').hide().css('display', 'none');
+			if ($('#Monitor-tab').hasClass('active')) {
+				$('#basic-tab').click();
+			}
+		}
+	}
+
+	$(document).ready(function() {
+		$('#specific-info').hide();
+		$('#warranty-info').hide();
+		$('#network-info').hide();
+		$('#purchase-info').hide();
+		$('#Monitor-info').hide();
+		$('#MonitorHeaderTab').hide();
+
+		BindingDropdowens();
+		BindDropdown('/Assets/GetAssetType','assetTypeSelect','','Alias','CallType','AssetType');
+
+		$('#assetTypeSelect').val('C')
+
+		updateFormFields('C');
+		 
+		attachDynamicSuggestion('CPU_V', '/Assets/BindSuggestions',"CPU");
+		attachDynamicSuggestion('make', '/Assets/BindSuggestions',"MAKE");
+		attachDynamicSuggestion('MonitorMake', '/Assets/BindSuggestions',"MAKE");
+		attachDynamicSuggestion('screen_size', '/Assets/BindSuggestions',"ScreenSize");
+		attachDynamicSuggestion('Desktop_Laptop_Server', '/Assets/BindSuggestions',"LapTopServer");
+		attachDynamicSuggestion('processor', '/Assets/BindSuggestions',"PROCESSOR");
+		attachDynamicSuggestion('bill_no', '/Assets/BindSuggestions',"Bill_No");
+		attachDynamicSuggestion('model_no', '/Assets/BindSuggestions',"Model_Number");
+		attachDynamicSuggestion('ram_size', '/Assets/BindSuggestions',"RAM");
+		attachDynamicSuggestion('storage', '/Assets/BindSuggestions',"HDD");
+		attachDynamicSuggestion('vendor_name', '/Assets/BindSuggestions',"Vendor");
+	});
+	 
+	function attachDynamicSuggestionsForAssetType(assetType) { 
+		setTimeout(() => { 
+			attachDynamicSuggestion('Software', '/Assets/BindSuggestions',"Software");
+			attachDynamicSuggestion('SoftwareVersion', '/Assets/BindSuggestions',"SoftwareInstall");
+			attachDynamicSuggestion('SoftwareLicence', '/Assets/BindSuggestions',"Licence");
+			attachDynamicSuggestion('processor', '/Assets/BindSuggestions');
+			attachDynamicSuggestion('ram_size', '/Assets/BindSuggestions',"RAM");
+			attachDynamicSuggestion('storage', '/Assets/BindSuggestions',"HDD");
+			attachDynamicSuggestion('processor', '/Assets/BindSuggestions',"PROCESSOR");
+			attachDynamicSuggestion('AdapterSRNO', '/Assets/BindSuggestions',"ADAPTER_SR_NO");
+
+		}, 100);
+	}
+ 
+	function HideTabs(tab1, tab2, tab3, tab4, tab5, tab6) {
+		$(`#${tab1}`).hide();
+		$(`#${tab2}`).hide();
+		$(`#${tab3}`).hide();
+		$(`#${tab4}`).hide();
+		$(`#${tab5}`).show();
+		$(`#${tab6}`).hide();
+	}
+
+	function SaveAndUpdateAssets(URL) {
+		const Payload = {
+			CPU_ASSET_CODE: $('#asset_code').val(), 
+			SR_NO: $('#SRNOAsset').val(), 
+			DEPT: $('#department').val(), 
+			MAKE: $('#make').val(), 
+			Model_Number: $('#model_no').val(), 
+			PURCHASE_UNIT: $('#purchase_unit').val(),
+			PURCHASE_DATE_YEAR: $('#purchase_year').val(),
+			Bill_No: $('#bill_no').val(),
+			Bill_Date: $('#bill_date').val(),
+			vendor: $('#vendor_name').val(),
+			Price: $('#price').val(),
+			Ip_No: $('#ip_address').val(),
+			RemoteAllowed: $('#remote_allowed').val(),
+			Host_Name: $('#host_name').val(),
+			PROCESSOR: $('#processor').val(),
+			RAM: $('#ram_size').val(),
+			HDD: $('#storage').val(),
+			Screen_Size: $('#screen_size').val(),
+			RAM_Type: $('#ram_type').val(),
+			INSTALLED_UNIT: $('#installation_location').val(),
+			HDD_Type: $('#HddType').val(),
+			Asset_Type: $('#assetTypeSelect').val(),
+			Asset_Name: $('#assetTypeSelect option:selected').text(),
+			Resolution:$('#resolution').val(),
+			Panel_Type: $('#panel_type').val(),
+			RAM_Type: $('#Generation').val(),
+			Printer_Type: $('#printer_type').val(),
+			Rental_Company: $('#rental_company').val(),
+			RentEndDate: $('#rental_end_date').val(),
+			RentStartDate: $('#rental_start_date').text(),
+			PrintSpeed: $('#print_speed').val(),
+			PaperCapacity: $('#paper_capacity').val(),
+			Firewall_Type: $('#firewall_type').val(),
+			Throughput: $('#throughput').text(),
+			Port_Count:$('#port_count').val(),
+			RecognitionType: $('#recognition_type').val(),
+			UserCapacity: $('#capacity').val(),
+			Connectivity: $('#connectivity').val(),
+			ChairType: $('#chair_type').val(),
+			Material: $('#material').val(),
+			Color: $('#color').text(),
+			CoolingCapacityTon:$('#cooling_capacity').val(),
+			EnergyRating: $('#energy_rating').val(),
+			InstallationLocation: $('#installation_location').val(),
+			NoiseLevels: $('#NoiseLevels').val(),
+			VehicleType: $('#vehicle_type').text(),
+			RegistrationNo:$('#registration_no').val(),
+			EngineNo: $('#engine_no').text(),
+			FuelType:$('#fuel_type').val(),
+			WarrantyValidity:$('#valid_upto').val(),
+			MONTH:$('#months').val(),
+			WARRANTY_AMC:$('#warranty_type').val(),
+			Desktop_Laptop_Server:$('#Desktop_Laptop_Server').val(),
+			Monitor_Asset_Code: $('#monitor_asset_code').val(),
+			Monitor_Make: $('#monitor_make').val(),
+			Monitor_Model: $('#monitor_model').val(),
+			Monitor_Serial: $('#monitor_serial').val(),
+			Monitor_Size: $('#monitor_size').val(),
+			MonitorSrNo: $('#MonitorSrNo').val(),
+			CPU_V: $('#CPU_V').val(),
+			USER_NAME: $('#User_Name').val(),
+			Employee_Code: $('#Employee_Code').val(), 
+			Software: $('#Software').val(),
+			SoftwareVersion: $('#SoftwareVersion').val(),
+			SoftwareKey: $('#SoftwareKey').val(),
+			SoftwareLicence: $('#SoftwareLicence').val(),
+			With_Monitor: $('#monitor').is(':checked'),
+			LoginName:sessionStorage.getItem("UserName")
+		};
+		console.log(URL)
+		$.ajax({
+			url: URL,
+			type: 'POST',
+			contentType: 'application/json',
+			data: JSON.stringify(Payload),
+			success: function(response) {
+				if (response.success) {
+					saveInvoice()
+					  fireSweetAlert(`Asset Registred With Invoice`, 'success');
+				} else {
+					fireSweetAlert(`${response.message}`, 'error');
+				}
+			},
+			error: function(xhr, status, error) {
+				fireSweetAlert('An unexpected error occurred: ' + error, 'error');
+				console.error('Error details:', xhr.responseText);
+			}
+		});
+	}
+
+	$('#btnSaveAndUpdate').on('click', function () {
+		let AssetType = $('#assetTypeSelect option:selected').val();
+
+		if(AssetType == "0"){
+			fireSweetAlert('Please select assetType !','error');
+			return
+		}
+
+		let btnText = $(this).text().trim();
+
+		let URL = '';
+
+		if (btnText === 'Update') {
+			URL = '/Assets/UpdateAssets';
+
+		}
+		else if (btnText === 'Save') {
+			URL = '/Assets/AssetRegistration';
+		}
+
+		if (URL) {
+			SaveAndUpdateAssets(URL); 
+		}
+	});
+
+	function BindingDropdowens(){
+		BindDropdown('/Assets/BindAssetType','department',authToken,'DEPT','DEPT','Department')
+		BindDropdown('/Assets/BindPuchaseUnit','purchase_unit',authToken,'compcode','N_compcode','Purchase Unit') 
+		BindDropdown('/Assets/BindPuchaseUnit','installation_location',authToken,'compcode','N_compcode','Install Unit')
+	}
+	 
+	$('#assetTypeSelect').on('change', function() {
+		const selectedAssetType = $(this).val();
+		$('#network-tab').parent().show();
+		$('#warranty-tab').parent().show();
+		$('#specific-tab').parent().show();
+		$('#purchase-tab').parent().show();
+
+		if (selectedAssetType != 'C') {
+			$('#monitorContainer').addClass('d-none');
+		} else {
+			$('#monitorContainer').removeClass('d-none');
+		}
+
+		handleMonitorTabVisibility();
+
+		if(selectedAssetType == "AC" || selectedAssetType == 'Chair' ||
+		   selectedAssetType == 'Vehicle' || selectedAssetType == 'T' ||
+		   selectedAssetType == 'RAM' || selectedAssetType == 'HDD' ||
+		   selectedAssetType == 'V' || selectedAssetType == 'B' ||
+		   selectedAssetType == 'F' || selectedAssetType == 'W' ||
+		   selectedAssetType == 'P' || selectedAssetType == 'RP') {
+			$('#network-tab').parent().hide().css('display', 'none');
+		}
+
+		if(selectedAssetType == 'RP') {
+			$('#purchase-tab').parent().hide().css('display', 'none');
+		}
+
+		updateFormFields(selectedAssetType);
+	});
+	 
+	$('#monitor').on('change', function () {
+		handleMonitorTabVisibility();
+		let assetCode = $('#asset_code').val()?.trim();
+		if (assetCode && $(this).is(':checked')) {
+			let parts = assetCode.split('/');
+			if (parts.length >= 3) { 
+				let monitorParts = [...parts];
+				monitorParts[2] = 'M' + parts[2].substring(1);
+				let monitorAssetCode = monitorParts.join('/');
+				$('#monitor_asset_code').val(monitorAssetCode);
+			}
+		} else if (!$(this).is(':checked')) { 
+			$('#monitor_asset_code').val('');
+		}
+	});
+
+	function calculateWarrantyMonths() {
+		const purchaseDate = $('#bill_date').val();
+		const validUptoDate = $valid_upto.val();
+		const enteredMonths = $('#months').val();
+		 
+		if (!purchaseDate) {
+			fireSweetAlert("You can't select Validity or Months until you select Purchase Date from Purchase Info Tab", 'error');
+			$valid_upto.val('');
+			$('#months').val('');
+			return;
+		}
+
+		const startDate = new Date(purchaseDate);
+		 
+		if (validUptoDate && !enteredMonths) {
+			const endDate = new Date(validUptoDate);
+
+			if (endDate < startDate) {
+				$('#months').val('');
+				fireSweetAlert('Valid Up To date must be after Purchase Date', 'warning');
+				$valid_upto.val('');
+				return;
+			}
+
+			let months = (endDate.getFullYear() - startDate.getFullYear()) * 12;
+			months += endDate.getMonth() - startDate.getMonth();
+
+			if (endDate.getDate() >= startDate.getDate()) {
+				months += 1;
+			}
+
+			$('#months').val(months);
+		}
+		 
+		else if (enteredMonths && !validUptoDate) {
+			const monthsToAdd = parseInt(enteredMonths);
+
+			if (isNaN(monthsToAdd) || monthsToAdd <= 0) {
+				fireSweetAlert('Please enter a valid number of months', 'warning');
+				$valid_upto.val('');
+				return;
+			}
+
+			let endDate = new Date(startDate);
+			endDate.setMonth(endDate.getMonth() + monthsToAdd);
+
+			const formattedDate = endDate.toISOString().split('T')[0];  
+			$valid_upto.val(formattedDate);
+		}
+		 
+		else if (!enteredMonths && !validUptoDate) {
+			$('#months').val('');
+			$valid_upto.val('');
+		}
+	}
+
+	function BindModalData() {
+
+		let AssetType = $('#assetTypeSelect option:selected').val();
+
+		if(AssetType == "0"){
+			fireSweetAlert('Please select assetType !','error');
+			return
+		}
+
+		$.ajax({
+			url: '/Assets/BindDetailsData',
+			type: 'GET',
+			data: { AssetType: AssetType },
+			dataType: 'json',
+			beforeSend: function () {
+				$('#tblContainer').html(`
+					<div class="d-flex justify-content-center align-items-center py-5">
+						<div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+							<span class="sr-only">Loading...</span>
+						</div>
+						<div class="ms-3 fs-5 text-muted">Please wait, loading data...</div>
+					</div>
+				`);
+			},
+			success: function (data) {
+
+				let parsedData = (typeof data === 'string') ? JSON.parse(data) : data;
+
+				if (!parsedData || parsedData.length === 0) {
+					$('#tblContainer').html('<p class="text-danger text-center">No data found.</p>');
+					return;
+				}
+				let thead = `
+					<thead id="tableHeaders">
+						<tr>
+							<th style='text-wrap: nowrap;'>Action</th>
+							<th style='text-wrap: nowrap;'>Group</th>
+							<th style='text-wrap: nowrap;'>Asset Type</th>
+							<th style='text-wrap: nowrap;'>Purchase Unit</th>
+							<th style='text-wrap: nowrap;'>Purchase Year</th>
+							<th style='text-wrap: nowrap;'>CPU V</th>
+							<th style='text-wrap: nowrap;'>Bill No</th>
+							<th style='text-wrap: nowrap;'>Bill Date</th>
+							<th style='text-wrap: nowrap;'>Installed Unit</th>
+							<th style='text-wrap: nowrap;'>CPU Asset Code</th>
+							<th style='text-wrap: nowrap;'>User Name</th>
+							<th style='text-wrap: nowrap;'>Department</th>
+							<th style='text-wrap: nowrap;'>Make</th>
+							<th style='text-wrap: nowrap;'>Model Number</th>
+							<th style='text-wrap: nowrap;'>Machine S/N</th>
+							<th style='text-wrap: nowrap;'>Employee Code</th>
+							<th style='text-wrap: nowrap;'>Warranty/AMC</th>
+							<th style='text-wrap: nowrap;'>Company Code</th>
+							<th style='text-wrap: nowrap;'>Reporting Head</th>
+							<th style='text-wrap: nowrap;'>Status</th>
+							<th style='text-wrap: nowrap;'>Mobile No</th>
+							<th style='text-wrap: nowrap;'>Install Date</th>
+							<th style='text-wrap: nowrap;'>Login Name</th>
+							<th style='text-wrap: nowrap;'>Remote Allowed</th>
+							<th style='text-wrap: nowrap;'>Invoice Tag</th>
+						</tr>
+					</thead>
+				`;
+
+				let tbody = '<tbody id="tableBody">';
+				parsedData.forEach((item, idx) => {
+					tbody += `
+						<tr class="rowHeight" id="row_${idx}">
+							<td class="text-center">
+								<button class="btn" data-index="${idx}" onclick="RetriveDataFillForm('${item.CPU_ASSET_CODE}')"" >
+									<i class="fa fa-edit" style='color:blue'></i>
+								</button>
+							</td>
+							<td style='text-wrap: nowrap;'>${item.Group || ''}</td>
+							<td style='text-wrap: nowrap;'>${item.Asset_Type || ''}</td>
+							<td style='text-wrap: nowrap;'>${item.PURCHASE_UNIT || ''}</td>
+							<td style='text-wrap: nowrap;'>${item.PURCHASE_DATE_YEAR || ''}</td>
+							<td style='text-wrap: nowrap;'>${item.CPU_V || ''}</td>
+							<td style='text-wrap: nowrap;'>${item.Bill_No || ''}</td>
+							<td style='text-wrap: nowrap;'>${FormateDateTime(item.Bill_Date) || ''}</td>
+							<td style='text-wrap: nowrap;'>${item.INSTALLED_UNIT || ''}</td>
+							<td style='text-wrap: nowrap;'>${item.CPU_ASSET_CODE || ''}</td>
+							<td style='text-wrap: nowrap;'>${item.USER_NAME || ''}</td>
+							<td style='text-wrap: nowrap;'>${item.DEPT || ''}</td>
+							<td style='text-wrap: nowrap;'>${item.MAKE || ''}</td>
+							<td style='text-wrap: nowrap;'>${item.Model_Number || ''}</td>
+							<td style='text-wrap: nowrap;'>${item.Machine_Sl_No || ''}</td>
+							<td style='text-wrap: nowrap;'>${item.Employee_Code || ''}</td>
+							<td style='text-wrap: nowrap;'>${item.WARRANTY_AMC || ''}</td>
+							<td style='text-wrap: nowrap;'>${item.CompCode || ''}</td>
+							<td style='text-wrap: nowrap;'>${item.Reporting_Head || ''}</td>
+							<td style='text-wrap: nowrap;'>${item.Status || ''}</td>
+							<td style='text-wrap: nowrap;'>${item.MobileNo || ''}</td>
+							<td style='text-wrap: nowrap;'>${FormateDateTime(item.Install_Date) || ''}</td>
+							<td style='text-wrap: nowrap;'>${item.LoginName || ''}</td>
+							<td style='text-wrap: nowrap;'>${item.RemoteAllowed || ''}</td>
+							<td style='text-wrap: nowrap;'>${item.Invoice_Tag || ''}</td>
+
+						</tr>
+					`;
+				});
+				tbody += '</tbody>';
+
+				let tableHtml = `
+					<table id="dataTable" class="table table-bordered table-striped w-100"
+						   style="border:1px solid #ccc;border-collapse:collapse;">
+						${thead}
+						${tbody}
+					</table>
+				`;
+				$('#tblContainer').html(tableHtml);
+
+				if ($.fn.DataTable.isDataTable('#dataTable')) {
+					$('#dataTable').DataTable().destroy();
+				}
+
+				let table = $('#dataTable').DataTable({
+					paging: true,
+					searching: true,
+					ordering: false,
+					scrollCollapse: false,
+					scrollY: "500px",
+					info: false,
+					autoWidth: true,
+					fixedHeader: true,
+				});
+
+				setTimeout(() => {
+					table.columns.adjust().draw();
+				}, 100);
+
+				$('#EditModal').modal('show');
+			},
+			error: function (xhr, status, error) {
+				console.error("Error:", status, error);
+				$('#tblContainer').html('<p class="text-danger text-center">Error loading data.</p>');
+			}
+		});
+	}
+
+	function FormateDateTime(Datetime)
+	{
+		const DateObj = new Date(Datetime)
+		const formatedDate = DateObj.toISOString().split('T')[0];
+		return formatedDate;
+	}
+	 
+	function RetriveDataFillForm(assetCode) {
+		$.ajax({
+			url: '/Assets/RetriveDataFromAssetCode',
+			type: 'GET',
+			data: { assetCode: assetCode },
+			dataType: 'json',
+			success: function (data) {
+				if (data.success) {
+					let parsedData = typeof data.data === 'string' ? JSON.parse(data.data) : data.data;
+
+					if (parsedData && parsedData.length > 0) {
+						const asset = parsedData[0]; 
+						$('#assetTypeSelect').val(asset.Asset_Type || '').trigger('change'); 
+						setTimeout(() => { 
+							$('#asset_code').val(asset.CPU_ASSET_CODE || '');
+							$('#User_Name').val(asset.USER_NAME || '');
+							$('#Group').val(asset.Group || 'RICHA');
+							$('#Employee_Code').val(asset.Employee_Code || '');
+							$('#CPU_V').val(asset.CPU_V || '');
+							$('#department').val(asset.DEPT || 'EDP STOCK');
+							$('#SRNOAsset').val(asset.SR_NO || '');
+							$('#make').val(asset.MAKE || '');
+							$('#model_no').val(asset.Model_Number || '');
+							$('#Desktop_Laptop_Server').val(asset.Desktop_Laptop_Server || ''); 
+							if (asset.With_Monitor) {
+								$('#monitor').prop('checked', true);
+								handleMonitorTabVisibility();
+								$('#monitor_asset_code').val(asset.Monitor_Asset_Code || '');
+								$('#MonitorType').val(asset.Monitor_Type || '');
+								$('#MonitorMake').val(asset.Monitor_Make || '');
+								$('#MonitorSrNo').val(asset.MonitorSrNo || '');
+								$('#screen_size').val(asset.Monitor_Size || '');
+							} 
+							$('#purchase_unit').val(asset.PURCHASE_UNIT || '').trigger('change');
+							$('#installation_location').val(asset.INSTALLED_UNIT || '').trigger('change');
+							$('#bill_no').val(asset.Bill_No || '');
+							if (asset.Bill_Date) {
+								$('#bill_date').val(FormateDateTime(asset.Bill_Date));
+							}
+							$('#purchase_year').val(asset.PURCHASE_DATE_YEAR || '');
+							$('#vendor_name').val(asset.vendor || '');
+							$('#price').val(asset.Price || ''); 
+							$('#ip_address').val(asset.Ip_No || '');
+							$('#remote_allowed').val(asset.RemoteAllowed || '').trigger('change');
+							$('#host_name').val(asset.Host_Name || ''); 
+							$('#warranty_type').val(asset.WARRANTY_AMC || '').trigger('change');
+							if (asset.WarrantyValidity || asset.UPTO) {
+								let warrantyDate = asset.WarrantyValidity || asset.UPTO;
+								$('#valid_upto').val(FormateDateTime(warrantyDate));
+							}
+							$('#months').val(asset.MONTH || '');
+							 
+							fillAssetSpecificFields(asset);
+							 
+							$('#btnSaveAndUpdate') .removeClass('btn-success') .addClass('btn-danger') .text('Update');
+							$('#EditModal').modal('hide');
+							$('#basic-tab').click();
+
+						}, 300);  
+
+					} else {
+						fireSweetAlert('No data found for this asset code', 'warning');
+					}
+				} else {
+					fireSweetAlert('Failed to load asset data', 'error');
+				}
+			},
+			error: function (xhr, status, error) {
+				console.error("Error:", status, error);
+				fireSweetAlert('Error loading asset data: ' + error, 'error');
+			}
+		});
+	}
+	
+	function fillAssetSpecificFields(asset) {
+		const assetType = $('#assetTypeSelect').val();
+		 
+		if (assetType === 'C') {
+			$('#processor').val(asset.PROCESSOR || '');
+			$('#ram_size').val(asset.RAM || '');
+			$('#storage').val(asset.HDD || '');
+			$('#Software').val(asset.Windows_Version1 || '');
+			$('#SoftwareVersion').val(asset.Windows_Version_Installed || '');
+			$('#SoftwareKey').val(asset.Windows_Key || '');
+			$('#SoftwareLicence').val(asset.Windows_License_Type_Paper_OEM || '');
+			$('#HddType').val(asset.HDD_Type || '');
+			$('#Generation').val(asset.RAM_Type || asset.Generation || '');
+		}
+		 
+		if (assetType === 'L') {
+			$('#processor').val(asset.PROCESSOR || '');
+			$('#ram_size').val(asset.RAM || '');
+			$('#storage').val(asset.HDD || '');
+			$('#screen_size').val(asset.Screen_Size || '');
+			$('#resolution').val(asset.Resolution || '');
+			$('#panel_type').val(asset.Panel_Type || '');
+			$('#Generation').val(asset.RAM_Type || asset.Generation || '');
+			$('#BattrySrNo').val(asset.BATTERY_SR_NO || '');
+			$('#AdapterSRNO').val(asset.ADAPTER_SR_NO || '');
+			$('#Product_Name').val(asset.Product_Name || '');
+			$('#ServiceTag').val(asset.ServiceTag || '');
+			$('#WIFIMacID').val(asset.WIFIMacID || '');
+			$('#Software').val(asset.Windows_Version1 || '');
+			$('#SoftwareVersion').val(asset.Windows_Version_Installed || '');
+			$('#SoftwareKey').val(asset.Windows_Key || '');
+			$('#SoftwareLicence').val(asset.Windows_License_Type_Paper_OEM || '');
+			$('#HddType').val(asset.HDD_Type || '');
+		}
+		 
+		if (assetType === 'T') {
+			$('#processor').val(asset.PROCESSOR || '');
+			$('#ram_size').val(asset.RAM || '');
+			$('#storage').val(asset.HDD || '');
+			$('#screen_size').val(asset.Screen_Size || '');
+			$('#resolution').val(asset.Resolution || '');
+			$('#panel_type').val(asset.Panel_Type || '');
+		}
+		 
+		if (assetType === 'M') {
+			$('#screen_size').val(asset.Screen_Size || '');
+			$('#resolution').val(asset.Resolution || '');
+			$('#panel_type').val(asset.Panel_Type || '');
+		}
+		 
+		if (assetType === 'V') {
+			$('#screen_size').val(asset.Screen_Size || '');
+			$('#resolution').val(asset.Resolution || '');
+			$('#panel_type').val(asset.Panel_Type || '');
+		}
+		 
+		if (assetType === 'RP') {
+			$('#printer_type').val(asset.Printer_Type || '');
+			$('#rental_company').val(asset.Rental_Company || '');
+			if (asset.RentStartDate) {
+				$('#rental_start_date').val(FormateDateTime(asset.RentStartDate));
+			}
+			if (asset.RentEndDate) {
+				$('#rental_end_date').val(FormateDateTime(asset.RentEndDate));
+			}
+		}
+		 
+		if (assetType === 'P') {
+			$('#printer_type').val(asset.Printer_Type || '');
+			$('#print_speed').val(asset.PrintSpeed || '');
+			$('#paper_capacity').val(asset.PaperCapacity || '');
+		}
+		 
+		if (assetType === 'W') {
+			$('#port_count').val(asset.Port_Count || '');
+			$('#switch_type').val(asset.Switch_Type || '');
+			$('#speed').val(asset.Speed || '');
+		}
+		 
+		if (assetType === 'F') {
+			$('#firewall_type').val(asset.Firewall_Type || '');
+			$('#throughput').val(asset.Throughput || '');
+			$('#port_count').val(asset.Port_Count || '');
+		}
+		 
+		if (assetType === 'B') {
+			$('#recognition_type').val(asset.RecognitionType || '');
+			$('#capacity').val(asset.UserCapacity || '');
+			$('#connectivity').val(asset.Connectivity || '');
+		}
+		 
+		if (assetType === 'Chair') {
+			$('#chair_type').val(asset.ChairType || '');
+			$('#material').val(asset.Material || '');
+			$('#color').val(asset.Color || '');
+		}
+		 
+		if (assetType === 'RAM') {
+			$('#ram_capacity').val(asset.RAM_Capacity || '');
+			$('#ram_type').val(asset.RAM_Type || '');
+			$('#speed').val(asset.Speed || '');
+		}
+		 
+		if (assetType === 'HDD') {
+			$('#storage_capacity').val(asset.Storage_Capacity || '');
+			$('#drive_type').val(asset.Drive_Type || '');
+			$('#HddType').val(asset.HDD_Type || '');
+		}
+		 
+		if (assetType === 'AC') {
+			$('#cooling_capacity').val(asset.CoolingCapacityTon || '');
+			$('#energy_rating').val(asset.EnergyRating || '');
+			$('#installation_location').val(asset.InstallationLocation || '');
+			$('#NoiseLevels').val(asset.NoiseLevels || '');
+		}
+		 
+		if (assetType === 'Vehicle') {
+			$('#vehicle_type').val(asset.VehicleType || '');
+			$('#registration_no').val(asset.RegistrationNo || '');
+			$('#engine_no').val(asset.EngineNo || '');
+			$('#fuel_type').val(asset.FuelType || '');
+		}
+	}
+	 
+	function FormateDateTime(dateTime) {
+		if (!dateTime) return '';
+
+		try {
+			let dateObj;
+
+			if (typeof dateTime === 'string') {
+				if (dateTime.match(/^\d{4}-\d{2}-\d{2}$/)) {
+					return dateTime;
+				}
+				dateObj = new Date(dateTime);
+			} else if (dateTime instanceof Date) {
+				dateObj = dateTime;
+			} else {
+				return '';
+			}
+			if (isNaN(dateObj.getTime())) {
+				return '';
+			}
+
+			const year = dateObj.getFullYear();
+			const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+			const day = String(dateObj.getDate()).padStart(2, '0');
+
+			return `${year}-${month}-${day}`;
+		} catch (error) {
+			console.error('Error formatting date:', error);
+			return '';
+		}
+	}
+
+	function updateDependentFields(assetValue,empCode,UserName) {
+		let parts = assetValue.split('/');
+		let lastPart = parts.length >= 3 ? parts[2] : '';
+		 
+		$(`#${empCode}`).val(lastPart ? 'TEMP' + lastPart : '');
+		$(`#${UserName}`).val(lastPart ? 'STOCK' + lastPart : '');
+	}
+
+	function showAssetCodeSuggestion(suggestion, targetInputId, empCodeId, userNameId) {
+		let $targetInput = $(`#${targetInputId}`);
+		let $suggestionBox = $(`#${targetInputId}_suggestion`);
+
+		if ($suggestionBox.length === 0) {
+			$suggestionBox = $(`<div id="${targetInputId}_suggestion"></div>`)
+				.css({
+					position: 'absolute',
+					background: '#fff',
+					border: '1px solid #ccc',
+					padding: '8px',
+					borderRadius: '6px',
+					marginTop: '3px',
+					zIndex: 9999,
+					color: 'black',
+					cursor: 'pointer',
+					boxShadow: '0px 2px 5px rgba(0,0,0,0.1)'
+				});
+			$targetInput.after($suggestionBox);
+		}
+
+		$suggestionBox.text(`${suggestion}`);
+
+		$suggestionBox.off('click').on('click', function () {
+			$targetInput.val(suggestion.toUpperCase());
+			$(this).fadeOut(200, function () { $(this).remove(); });
+
+			updateDependentFields(suggestion, empCodeId, userNameId);
+		});
+	}
+	 
+	$('#valid_upto').on('change', function () {
+		$('#months').val('');  
+		calculateWarrantyMonths();
+	});
+	 
+	$('#months').on('change keyup', function () {
+		$('#valid_upto').val('');  
+		calculateWarrantyMonths();
+	});
+	 
+	$('#bill_date').on('change', function () {
+		calculateWarrantyMonths();
+	});
+
+	$('#asset_code').on('keyup', async function (e) {
+	
+		let currentValue = $(this).val().toUpperCase();
+		$(this).val(currentValue);
+	
+		const slashCount = (currentValue.match(/\//g) || []).length;
+	
+		if (slashCount === 2 && currentValue.endsWith('/')) {
+			const assetType = $('#assetTypeSelect').val();
+	
+			try {
+				const response = await $.ajax({
+					url: `/Assets/GetAssetCodeDetails?AssetType=${assetType}`,
+					type: 'GET'
+				});
+	
+				if (response) {
+					const result = JSON.parse(response);
+					const maxNum = result[0]?.max_number || 0;
+					const nextNum = parseInt(maxNum) + 1;
+					const parts = currentValue.split('/');
+					const companyPart = parts[0];
+					const srPart = parts[1];
+					const suggestedCode = `${companyPart}/${srPart}/${assetType}${nextNum}`;
+	
+					showAssetCodeSuggestion(suggestedCode, 'asset_code', 'Employee_Code', 'User_Name');
+					 
+				} else {
+					showAssetCodeSuggestion("No records found for this type.");
+				}
+	
+			} catch (error) {
+				console.error('Error fetching asset code details:', error);
+			}
+		}
+	});
+	
+	$('#asset_code').on('input paste keyup keydown change', function() {
+		debugger
+		updateDependentFields($(this).val(),'Employee_Code','User_Name');
+		let hostName = $(this).val();
+		let newHostName = hostName.replace(/\//g, "")
+		$('#host_name').val(newHostName)
+		
+		let assetCode = $('#asset_code').val()?.trim();
+		if (assetCode) {
+			let parts = assetCode.split('/');
+			if (parts.length >= 3) {
+				parts[2] = 'M' + parts[2].substring(1);
+				let newAssetCode = parts.join('/');
+				$('#monitor_asset_code').val(newAssetCode);
+			}
+		}
+	});
+	
+	$('#monitor_asset_code').on('input paste keyup keydown change', function() {
+		updateDependentFields($(this).val(),'EmployeeCode','UserName');
+	});
+
+	$('#bill_date').on('change', function() {
+		const billDateVal = $(this).val();
+
+		if (billDateVal) {
+			const billDate = new Date(billDateVal);
+			const year = billDate.getFullYear();
+			const nextYearShort = (year + 1).toString().slice(-2);  
+			const finYear = `${year}-${nextYearShort}`;  
+
+			$('#CPU_V').val(`BETWEEN ${finYear}`).prop('readonly', true);
+			$('#purchase_year').val(finYear).prop('readonly', true);
+		}
+	});
+
+	function ShowModalValidation() {
+		let AssetCode = $('#asset_code').val()?.trim();
+		let bill_date = $('#bill_date').val()?.trim();
+		let bill_no = $('#bill_no').val()?.trim();
+
+		if (!AssetCode) {
+			fireSweetAlert('Please fill the Asset Code from the Basic Information tab before uploading the invoice.', 'warning');
+			return;
+		}
+
+		if (!bill_date) {
+			fireSweetAlert('Please fill the Bill Date from the Purchase Information tab before uploading the invoice.', 'warning');
+			return;
+		}
+
+		if (!bill_no) {
+			fireSweetAlert('Please fill the Bill No from the Purchase Information tab before uploading the invoice.', 'warning');
+			return;
+		}
+		 
+		$('#txtBillNo').val(bill_no);
+		$('#BillDate').val(bill_date);
+
+		$('#InvoiceModal').modal('show');
+	}
+	
+	function CloseModal() {
+		$('#InvoiceModal').modal('hide');
+	}
+
+	function triggerUpload() {
+		$('#fileInput').click();
+	}
+
+	function saveInvoice() {
+		let action = false
+		const InvoiceNumber = $('#txtBillNo').val().trim();
+		const InvoiceDate = $('#BillDate').val();
+		const FileName = $('#txtFileName').val();
+		const fileInput = $('#fileInput')[0];
+		const AssetCode = $('#asset_code').val()?.trim();
+
+		if (!InvoiceNumber) {
+			showToast("Please Enter Invoice Number", 'error');
+			return;
+		}
+
+		if (!InvoiceDate) {
+			showToast("Please Enter Date", 'error');
+			return;
+		}
+
+		if (!fileInput || fileInput.files.length === 0) {
+			showToast("Please Upload Invoice Image", 'error');
+			return;
+		}
+
+		const formData = new FormData();
+		formData.append('Entity.InvoiceNumber', InvoiceNumber);
+		formData.append('Entity.Date', InvoiceDate);
+		formData.append('Entity.FileName', FileName);
+		formData.append('ImageFile', fileInput.files[0]);
+		formData.append(`SelectedAssetCodes`,AssetCode);
+		  
+		const $saveButton = $('button[onclick="saveInvoice()"]');
+		const originalText = $saveButton.html();
+		$saveButton.html('<i class="fas fa-spinner fa-spin me-1"></i> Saving...').prop('disabled', true);
+
+		$.ajax({
+			url: `/Dashboard/SaveAttachedInvoice`,
+			type: 'POST',
+			data: formData,
+			processData: false,
+			contentType: false,
+			success: function(response) {
+				$('#txtBillNo').val('');
+				$('#BillDate').val('');
+				$('#fileInput').val('');
+				$('#selectedFileName').remove(); 
+				$('#InvoiceModal').modal('hide');    
+				  action = true;
+			},
+			error: function(xhr) {
+				let errorMessage = "An unexpected error occurred.";
+
+				try {
+
+					const response = JSON.parse(xhr.responseText);
+					if (response && response.message) {
+						errorMessage = response.message;
+					}
+				} catch (e) {
+
+					errorMessage = xhr.responseText || errorMessage;
+				}
+
+				Swal.fire({
+					text: errorMessage,
+					icon: "error"
+				});
+			},
+
+			complete: function() {
+				$saveButton.html(originalText).prop('disabled', false);
+			}
+		});
+		return action
+	}
+
+	$('#fileInput').on('change', function () {
+		if (this.files && this.files.length > 0) { 
+			const fileNames = Array.from(this.files).map(f => f.name).join(', ');
+			 
+			$('#txtFileName').val(fileNames);
+		} else {
+			$('#txtFileName').val('');
+		}
+	});
+
+</script>

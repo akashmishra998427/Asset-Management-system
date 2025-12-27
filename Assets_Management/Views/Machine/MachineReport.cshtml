@@ -1,0 +1,190 @@
+﻿
+@{
+    ViewData["Title"] = "MachineReport";
+    Layout = "~/Views/Shared/ItLayout.cshtml";
+}
+<link href="~/css/MachineReport.css" rel="stylesheet" />
+
+<div class="overflow-hidden">
+	<div class="ps-0">
+		<div class="d-flex align-items-center flex-wrap gap-2">
+			<h4 class="m-0 ps-2 flex-grow-1">Machine Report</h4>
+		</div>
+		<div class="mt-2">
+			<div class="row">
+				<div class="col-md-3">
+                    <div class="d-flex flex-column gap-2 custom-dropdown">
+                        <label for="ddlPremises" class="fw-bold m-0 text-secondary d-block">Premises:</label>
+                        <select id="ddlPremises" onchange="BindLines()" class="form-control select2"></select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="d-flex flex-column gap-2 custom-dropdown d-none">
+                        <label for="ddlLine" class="fw-bold m-0 text-secondary d-block">Line:</label>
+                        <select id="ddlLine" class="form-control select2">
+                            <option value="">--Select Line--</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+
+                </div> 
+               
+                <div class="col-md-1">
+                    <button type="button" class="btn btn-success" id="BtnFilter" style="margin-left: 47%"> Filter </button>
+                </div>
+
+                <div class="col-md-1">
+                    <button type="button" class="btn btn-primary" id="BtnExport"> Export </button>
+                </div>
+            </div>
+		</div>
+		<div class="mt-4" id="tblRptContainer">
+ 		</div>
+	</div>
+ </div>
+
+<script>
+
+	let authToken = '';
+    let payload = { 
+        CompCode : '',
+        LineId: '',
+        MachineType:'',
+        Make:''
+    };
+    $(document).ready(function(){
+	   BindDropdown('/Machine/BindPremises','ddlPremises',authToken,'compcode','N_compcode','Premises')
+       BindDropdown('/Machine/BindLineID','ddlLine',authToken,'LineId','LineId','Line')
+       BindMachineDetail(payload)
+	})
+
+    function BindMachineDetail(payload) {                  
+        const $container = $('#tblRptContainer');
+        $container.html(`
+            <div class="d-flex justify-content-center align-items-center py-5">
+                <div class="spinner-border text-primary" style="width:3rem;height:3rem;" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <span class="ms-3 fs-5 text-muted">Please wait, loading data…</span>
+            </div>
+        `);
+ 
+        $.ajax({
+            type:'POST',
+            url:'/Machine/GetMachineReport',
+            data: JSON.stringify(payload),
+            contentType:'application/json; charset=utf-8',
+            dataType:'json'
+        })
+        .done(data => {
+            if (!Array.isArray(data) || data.length === 0) {
+                $container.html(`<p class="text-center text-muted py-4">No records found.</p>`);
+                return;
+            }
+
+            let html = `
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped custom-table datatable w-100" id="dataTable">
+                        <thead class="bg-light">
+                            <tr>
+                                <th><strong>Machine&nbsp;Code</strong></th>
+                                <th><strong>Premises</strong></th>
+                                <th><strong>Line&nbsp;Id</strong></th>
+                                <th><strong>Active</strong></th>
+                                <th><strong>Entry&nbsp;Date</strong></th>
+                                <th><strong>Entered&nbsp;By</strong></th>
+                                <th><strong>Update&nbsp;Date</strong></th>
+                                <th><strong>Updated&nbsp;By</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            data.forEach(row => {
+                html += `
+                    <tr>
+                        <td>${row.MachineCode ?? ''}</td>
+                        <td>${row.CompCode    ?? ''}</td>
+                        <td>${row.LineId      ?? ''}</td>
+                        <td>${row.Active ? 'Yes' : 'No'}</td>
+                        <td>${row.EntryDate  ? formatDate(row.EntryDate)  : ''}</td>
+                        <td>${row.EnterBy    ?? ''}</td>
+                        <td>${row.UpdateDate ? formatDate(row.UpdateDate) : ''}</td>
+                        <td>${row.UpdatedBy  ?? ''}</td>
+                    </tr>
+                `;
+            });
+
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            $container.html(html); 
+            $('#dataTable').DataTable({
+                   paging: false,
+                   searching: false,
+                   ordering: false,
+                   info: true,
+                   fixedHeader: true,
+                   pageLength: 10,
+                   scrollY: "550px",
+                   scrollX: true,
+                   scrollCollapse: true,
+                   destroy: true,
+                   autoWidth: false,
+                   dom: 'Blfrtip',
+            });
+        })
+        .fail((xhr, status, err) => {
+            console.error('BindMachineDetail error', err, xhr.responseText);
+            $container.html(`
+                <table class="table table-bordered table-striped custom-table datatable w-100" id="dataTable">
+                        <thead class="bg-light">
+                            <tr>
+                                <th><strong>Machine&nbsp;Code</strong></th>
+                                <th><strong>Premises</strong></th>
+                                <th><strong>Line&nbsp;Id</strong></th>
+                                <th><strong>Active</strong></th>
+                                <th><strong>Entry&nbsp;Date</strong></th>
+                                <th><strong>Entered&nbsp;By</strong></th>
+                                <th><strong>Update&nbsp;Date</strong></th>
+                                <th><strong>Updated&nbsp;By</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                           <tr>
+                               <td colspan="8" class="text-center text-danger">Failed to load data. Please try again later.</td>
+                           </tr>
+                        </tbody>
+                    </table>
+                </div>
+            `);
+        });
+    }
+
+    function formatDate(dateString) {
+        if (!dateString) return '';
+        const d = new Date(dateString);
+        if (isNaN(d)) return dateString;           
+        return d.toLocaleDateString('en-GB');       
+    }
+
+    $('#BtnFilter').on('click',function(){
+        let payload = {
+            CompCode :$('#ddlPremises').val()||'',
+            LineId: '',
+            MachineType:'',
+            Make:''
+        };
+        BindMachineDetail(payload)
+    }) 
+    
+    $('#BtnExport').on('click',function(){
+        exportToExcel('dataTable', 'Machine Details');
+        showToast("Data Exported Successfully", "success");
+    })
+   
+</script>

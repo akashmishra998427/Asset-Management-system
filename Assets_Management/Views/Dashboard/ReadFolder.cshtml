@@ -1,0 +1,121 @@
+﻿@{
+    ViewData["Title"] = "Attach Folder";
+    Layout = "~/Views/Shared/bkancklayout.cshtml";
+}
+
+<link href="~/css/site.css" rel="stylesheet" />
+<link href="~/css/attachinvoice.css" rel="stylesheet" />
+
+<div class="invoice-form-container py-5" style="background-color: #f5f6f8;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8">
+                <div class="card shadow-lg border-0 rounded-4">
+                    <div class="card-header bg-primary text-white rounded-top-4">
+                        <h5 class="mb-0">
+                            <i class="fas fa-folder-open me-2"></i>Upload Folder
+                        </h5>
+                    </div>
+
+                    <div class="card-body p-4">
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                Select Folder <sub class="text-danger">*</sub>
+                            </label>
+
+                            <div id="uploadArea"
+                                 class="upload-box border border-2 border-dashed rounded-4 p-5 text-center bg-light"
+                                 onclick="triggerFolderUpload()">
+                                <i class="fas fa-folder-plus fa-3x text-primary mb-3"></i>
+                                <h6 class="text-secondary mb-1">Click to Select a Folder</h6>
+                                <p class="text-muted small mb-2">Supported: PDF, JPG, PNG, DOC, DOCX</p>
+                                <p id="fileCount" class="fw-bold text-success mt-3 d-none"></p>
+                            </div>
+
+                            <input type="file" id="folderInput" class="d-none" webkitdirectory directory multiple />
+                        </div>
+
+                        <div class="text-end">
+                            <button type="button" class="btn btn-success btn-lg px-4" onclick="saveFolder()">
+                                <i class="fas fa-save me-2"></i>Save Folder
+                            </button>
+                        </div>
+
+                        <div class="mt-3" id="uploadStatus"></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+ 
+    <script>
+        // Trigger file picker when user clicks upload area
+        function triggerFolderUpload() {
+            $('#folderInput').click();
+        }
+
+        // Display count when folder selected
+        $('#folderInput').on('change', function () {
+            const files = this.files;
+            const countDisplay = $('#fileCount');
+
+            if (files.length > 0) {
+                countDisplay.text(`${files.length} file${files.length > 1 ? 's' : ''} selected`);
+                countDisplay.removeClass('d-none');
+            } else {
+                countDisplay.addClass('d-none');
+            }
+        });
+
+        // Upload folder to API
+        async function saveFolder() {
+            const input = document.getElementById('folderInput');
+            const files = input.files;
+            const statusDiv = document.getElementById('uploadStatus');
+
+            if (files.length === 0) {
+                statusDiv.innerHTML = `<div class="alert alert-warning">Please select a folder first.</div>`;
+                return;
+            }
+
+            // Prepare form data
+            const formData = new FormData();
+            for (let i = 0; i < files.length; i++) {
+                formData.append('files', files[i]);
+            }
+
+            statusDiv.innerHTML = `<div class="alert alert-info">Uploading... please wait.</div>`;
+
+            try {
+                const response = await fetch('/api/upload-folder', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    statusDiv.innerHTML = `
+                        <div class="alert alert-success">
+                            <strong>✅ ${result.message}</strong><br/>
+                            Total Files: ${result.count}
+                        </div>`;
+                } else {
+                    statusDiv.innerHTML = `
+                        <div class="alert alert-danger">
+                            ❌ Error: ${result.message || 'Upload failed.'}
+                        </div>`;
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `
+                    <div class="alert alert-danger">
+                        ⚠️ An error occurred while uploading.<br/>${error.message}
+                    </div>`;
+            }
+        }
+    </script>
+ 

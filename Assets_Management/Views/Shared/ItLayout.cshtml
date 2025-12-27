@@ -1,0 +1,294 @@
+﻿@await Html.PartialAsync("HeaderPritialView")
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Inventory</title>
+    <link rel="shortcut icon" href="~/Images/rc.png" type="image/x-icon">
+    <!-- Bootstrap CSS -->
+    <script src="~/bootstrap/js/bootstrapbundle.js"></script>
+    <link href="~/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/bootstrap/css/bootstrap.rtl.min.css" rel="stylesheet" />
+    <!-- jQuery -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <!-- DataTable -->
+    <link href="~/assets/datatable1/css/datatable.css" rel="stylesheet" />
+    <script src="~/assets/datatable1/js/datatable.js"></script>
+    <!-- Custom JavaScript -->
+    <script src="~/customjavascript/commoncontrol.js"></script>
+    <!-- FontAwesome -->
+    <script src="~/font-awesome/js/all.js"></script>
+    <script src="~/font-awesome/js/all.min.js"></script>
+    <link href="~/font-awesome/css/all.css" rel="stylesheet" />
+    <link href="~/font-awesome/css/all.min.css" rel="stylesheet" />
+    <!-- Select 2 -->
+    <link href="~/assets/select2/css/select2.css" rel="stylesheet" />
+    <script src="~/assets/select2/js/select2.js"></script>
+    <!-- Sweet Alert -->
+    <script src="~/assets/sweetalert/sweetalertjs/sweetalert.js"></script>
+    <!-- DatePicker -->
+    <script src="~/assets/datepicker/js/datepicker.js"></script>
+    <link href="~/assets/datepicker/css/datepicker.css" rel="stylesheet" />
+    <!-- Dowenload to Excal -->
+    <script src="~/dowenlodtoexcal libraray/excaldowenlod.js"></script>
+    <!-- Axuse livraray.js -->
+    <script src="~/customjavascript/axuse.js"></script>
+    <!-- Custom Css Starts -->
+    <link href="~/css/LayoutCss.css" rel="stylesheet" />
+    <link href="~/css/site.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="d-flex" id="mainContentAria">
+        <div style="" id="sidebar" class="text-dark">
+            <nav class="nav flex-column p-2" id="navigationSidebar">
+
+            </nav>
+        </div>
+        <div id="mainContent">
+            @RenderBody()
+        </div>
+    </div>
+    <script>
+
+        function isMobile() {
+            return $(window).width() <= 700;
+        }
+
+        function updateActiveStates($clickedItem) 
+        {
+            if ($clickedItem.closest('.collapse').length === 0) 
+            {
+                $('#sidebar > nav > a').not($clickedItem).removeClass('active-menu');
+                $clickedItem.toggleClass('active-menu');
+            } else 
+            {
+                const $siblings = $clickedItem.closest('.collapse').find('a');
+                $siblings.not($clickedItem).removeClass('active-menu');
+                $clickedItem.toggleClass('active-menu');
+            }
+            updateParentIndicators();
+        }
+
+        function updateParentIndicators() 
+        {
+            $('#sidebar nav a').removeClass('has-active-submenu');
+            $('#sidebar .active-menu').each(function() {
+                const $parents = $(this).parents('.collapse');
+                $parents.each(function() {
+                    const parentId = $(this).attr('id');
+                    $('a[href="#' + parentId + '"]').addClass('has-active-submenu');
+                });
+            });
+        }
+
+        function highlightCurrentPage() 
+        {
+            let currentUrl = window.location.pathname.toLowerCase().replace(/\/$/, ''); 
+            $('#sidebar nav a').removeClass('active-menu has-active-submenu');
+            $('#sidebar .collapse').removeClass('show');
+
+            let $matchingItem = $('#sidebar a').filter(function () {
+                let href = $(this).attr('href');
+                if (!href || href === '#' || href === '') return false;
+                let normalizedHref = href.toLowerCase().replace(/\/$/, ''); 
+                return normalizedHref === currentUrl;
+            });
+
+            if ($matchingItem.length === 0) 
+            {
+                $('#sidebar a').each(function () 
+                {
+                    let href = $(this).attr('href');
+                    if (!href || href === '#' || href === '') return;
+                    let normalizedHref = href.toLowerCase().replace(/\/$/, '');
+                    if (currentUrl.includes(normalizedHref))
+                    {
+                        $matchingItem = $(this);
+                        return false;
+                    }
+                });
+            }
+
+            if ($matchingItem.length > 0) 
+            {
+                $matchingItem.addClass('active-menu');
+                let $currentParent = $matchingItem.closest('.collapse');
+                while ($currentParent.length > 0) 
+                {
+                    $currentParent.addClass('show');
+                    const parentId = $currentParent.attr('id');
+                    const $parentToggle = $('a[href="#' + parentId + '"]');
+                    if ($parentToggle.length > 0) 
+                    {
+                        $parentToggle.addClass('has-active-submenu');
+                    }
+                    $currentParent = $currentParent.parent().closest('.collapse');
+                }
+            }
+            else 
+            {
+                console.warn("No matching menu item found for:", currentUrl);
+            }
+        }
+
+        function initializeMenuHighlighting() 
+        {
+            $('#sidebar nav a[data-bs-toggle="collapse"]').off('click').on('click', function(e) {
+                const $this = $(this);
+                const targetId = $this.attr('href');
+                const $targetCollapse = $(targetId);
+                const isSubSubMenu = $this.closest('.collapse').length > 0;
+
+                if (isSubSubMenu)
+                {
+                    e.stopPropagation();
+                    const $siblingMenus = $this.closest('.collapse')
+                                               .find('a[data-bs-toggle="collapse"]')
+                                               .not($this);
+                    $siblingMenus.each(function() {
+                        const siblingTargetId = $(this).attr('href');
+                        $(siblingTargetId).collapse('hide');
+                    });
+                    $targetCollapse.collapse('toggle');
+                } else {
+                    $('#sidebar > nav > .collapse').not(targetId).collapse('hide');
+                    $('#sidebar .collapse .collapse.show').collapse('hide');
+                }
+                updateActiveStates($this);
+            });
+
+            $('#sidebar nav a:not([data-bs-toggle="collapse"])').off('click').on('click', function() 
+            {
+                $('#sidebar nav a').removeClass('active-menu has-active-submenu');
+                $(this).addClass('active-menu');
+                let $currentParent = $(this).closest('.collapse');
+                while ($currentParent.length > 0) {
+                    const parentId = $currentParent.attr('id');
+                    const $parentToggle = $('a[href="#' + parentId + '"]');
+                    if ($parentToggle.length > 0) 
+                    {
+                        $parentToggle.addClass('has-active-submenu');
+                    }
+                    $currentParent = $currentParent.parent().closest('.collapse');
+                }
+            });
+            highlightCurrentPage();
+        }
+
+        $(document).ready(function() {
+            bindSidebarMenu();
+
+            if (isMobile()) {
+                $('#sidebar .collapse').on('show.bs.collapse', function() {
+                    if (isMobile()) 
+                    {
+                        const $submenu = $(this);
+                        const isNestedSubmenu = $submenu.parent().closest('.collapse').length > 0;
+                        if (isNestedSubmenu)
+                        {
+                            const parentLeft = $submenu.parent().closest('.collapse').css('left');
+                            const parentWidth = $submenu.parent().closest('.collapse').outerWidth();
+                            const left = parseInt(parentLeft) + parentWidth;
+                            $submenu.css({
+                                'position': 'absolute',
+                                'left': left + 'px',
+                                'top': '0',
+                                'z-index': '10001'
+                            });
+                        } 
+                        else 
+                        {
+                            $submenu.css({
+                                'position': 'absolute',
+                                'left': '60px',
+                                'top': $submenu.prev().position().top + 'px',
+                                'z-index': '10000'
+                            });
+                        }
+                    }
+                });
+                $(document).on('click', function(e) {
+                    if (isMobile() && !$(e.target).closest('#sidebar').length)
+                    {
+                        $('#sidebar .collapse.show').collapse('hide');
+                    }
+                });
+            }
+            $(window).on('resize', function() 
+            {
+                if (!isMobile())
+                {
+                    $('#sidebar .collapse').css({
+                        'position': '',
+                        'left': '',
+                        'top': '',
+                        'z-index': ''
+                    });
+                }
+            });
+        });
+
+        function bindSidebarMenu()
+        {
+            const payload = {
+                userName: sessionStorage.getItem("UserName"),
+                employeeCode: sessionStorage.getItem("empCode"),
+                userRole: sessionStorage.getItem("UserRole")
+            };
+            $.ajax({
+                url: "/Login/BindMenu",
+                type: "POST",
+                contentType: "application/json",
+                dataType: "json",
+                data: JSON.stringify(payload),
+                success: function (data) {
+                    //console.log('ajax response',data)
+                    let html = ``;
+                    function buildMenuHtml(items, parentId = 0, level = 0) {
+                        let menuHtml = '';
+                        const currentLevelItems = items.filter(item => item.Parent_Id === parentId);
+                        currentLevelItems.forEach(item => {
+                            const hasChildren = items.some(child => child.Parent_Id === item.ID);
+                            const collapseId = item.Menu_Name.replace(/\s+/g, '').replace(/\r\n/g, '') + "_" + item.ID + "_menu";
+                            const marginClass = level === 0 ? '' : level === 1 ? 'ms-3' : 'ms-4';
+                            if (item.URL && item.URL.trim() !== '' && !hasChildren)
+                            {
+                                const textClass = level === 0 ? 'nav-link fw-bold' : 'nav-link text-light';
+                                menuHtml += `
+                                    <a class="${textClass}" href="${item.URL.trim()}">
+                                        <i class="fa-solid  ${item.IconName}"></i>
+                                        <span>${item.Menu_Name.trim()}</span>
+                                    </a>
+                                `;
+                            }
+                            else if (hasChildren)
+                            {
+                                menuHtml += `
+                                    <a class="nav-link text-light" me-2 data-bs-toggle="collapse" href="#${collapseId}" role="button" aria-expanded="false" aria-controls="${collapseId}">
+                                        <i class=" fa-solid ${item.IconName}"></i>
+                                        <span>${item.Menu_Name.trim()}</span>
+                                    </a>
+                                    <div class="collapse ${marginClass} me-2" id="${collapseId}">
+                                        ${buildMenuHtml(items, item.ID, level + 1)}
+                                    </div>
+                                `;
+                            }
+                        });
+                        return menuHtml;
+                    }
+                    html = buildMenuHtml(data);
+                    $('#navigationSidebar').html(html);
+                    setTimeout(function(){
+                        initializeMenuHighlighting()
+                    }, 100);
+                },
+                error: function (xhr, status, error)
+                {
+                    console.error('Error fetching sidebar:', xhr.responseText || error);
+                }
+            });
+        }
+
+    </script>
+</body>
+</html>

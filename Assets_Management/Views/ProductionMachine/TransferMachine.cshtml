@@ -1,0 +1,577 @@
+﻿@{
+    ViewData["Title"] = "Machine Transfer Master";
+    Layout = "~/Views/Shared/ItLayout.cshtml";
+}
+<link href="~/css/TransferMachine.css" rel="stylesheet" />
+
+<div class="container-fluid">
+    <div class="main-container">
+        <div class="header-section">
+            <h4 class="header-title">
+                <i class="fas fa-cogs"></i>
+                Machine Transfer Master
+            </h4>
+        </div>
+
+        <div class="controls-section">
+            <div class="row align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">
+                        <i class="fas fa-building me-2"></i>Select Premises
+                    </label>
+                    <select class="form-select" id="ddlPremises">
+                        <option value="">Choose premises...</option>
+                    </select>
+                </div>
+                <div class="col-md-8">
+                    <div class="d-flex action-buttons justify-content-end">
+                        <button type="button" class="btn btn-success" id="btnTransfer" disabled>
+                            <i class="fas fa-exchange-alt me-2"></i>Transfer Selected
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <div class="loading-spinner" id="loadingSpinner">
+                <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-3 text-muted">Loading machine data...</p>
+            </div>
+
+            <div class="select-all-container" id="selectAllContainer" style="display: none;">
+                <input type="checkbox" class="custom-checkbox" id="selectAllCheckbox">
+                <label for="selectAllCheckbox" class="form-label mb-0 fw-semibold">
+                    Select All Machines
+                </label>
+                <span class="badge bg-primary ms-auto" id="selectedCount">0 selected</span>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover" id="machineTable" style="display: none;">
+                    <thead>
+                        <tr>
+                            <th width="50">
+                                <input type="checkbox" class="custom-checkbox" id="headerCheckbox">
+                            </th>
+                            <th>Machine Type</th>
+                            <th>Model No</th>
+                            <th>Make</th>
+                            <th>Serial No</th>
+                            <th>Machine Code</th>
+                            <th>Line ID</th>
+                            <th>Status</th>
+                            <th>Registered By</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="machineTableBody">
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <i class="fas fa-cog"></i>
+                <h5>No machines found</h5>
+                <p class="text-muted">Select a premises to view available machines.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Transfer Modal -->
+<div class="modal fade" id="transferModal" tabindex="-1" aria-labelledby="transferModalLabel" aria-hidden="true" style="top:200px">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header d-flex justify-content-between">
+                <h5 class="modal-title" id="transferModalLabel">
+                    <i class="fas fa-exchange-alt me-2"></i>
+                    Transfer Machines
+                </h5>
+                <button type="button" style="margin-left: 69%;" class="btn-close btn" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="transfer-form">
+                    <div class="mb-4">
+                        <div class="alert alert-info d-flex align-items-center">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <span>You are about to transfer <strong id="transferCount">0</strong> selected machine(s)</span>
+                        </div>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="transferDate" class="form-label fw-semibold">
+                                <i class="fas fa-calendar me-2"></i>Transfer Date *
+                            </label>
+                            <input type="date" class="form-control" id="transferDate" required>
+                            <div class="invalid-feedback">
+                                Please select a transfer date.
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="transferPremises" class="form-label fw-semibold">
+                                <i class="fas fa-building me-2"></i>Transfer To Premises *
+                            </label>
+                            <select class="form-select" id="transferPremises" required>
+                                <option value="">Choose target premises...</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Please select target premises.
+                            </div>
+                        </div>
+                    </div>
+ 
+                    <div class="mt-4">
+                        <h6 class="fw-semibold mb-3">
+                            <i class="fas fa-list me-2"></i>Selected Machines Summary
+                        </h6>
+                        <div class="selected-machines-summary" id="selectedMachinesSummary">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="btnConfirmTransfer">
+                    <i class="fas fa-check me-2"></i>Confirm Transfer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    let authToken = localStorage.getItem("authToken");
+    let dataTable;
+    let selectedMachines = [];
+    let UserName = sessionStorage.getItem('UserName');
+
+    $(document).ready(function() { 
+        initializePage();
+    });
+
+    function initializePage() {
+        BindPremises();
+        setupEventHandlers();
+        $('#transferDate').val(new Date().toISOString().split('T')[0]);
+    }
+
+    function setupEventHandlers() {
+        $('#ddlPremises').on('change', function() {
+            const selectedPremises = $(this).val();
+            resetTable();
+            updateActionButtons();
+
+            if (selectedPremises) {
+                loadMachineData(selectedPremises);
+            }
+        });
+
+        $('#selectAllCheckbox, #headerCheckbox').on('change', function() {
+            const isChecked = $(this).is(':checked');
+            $('.machine-checkbox').prop('checked', isChecked);
+            updateSelectedMachines();
+            updateActionButtons();
+        });
+
+        $(document).on('change', '.machine-checkbox', function() {
+            updateSelectedMachines();
+            updateActionButtons();
+            updateSelectAllState();
+        });
+
+        $('#btnTransfer').on('click', function() {
+            if (selectedMachines.length === 0) {
+                showAlert('Please select at least one machine to transfer!', 'warning');
+                return;
+            }
+            openTransferModal();
+        });
+
+        $('#btnConfirmTransfer').on('click', function() {
+            performTransfer();
+        });
+
+        $('#transferModal').on('shown.bs.modal', function() {
+            $('#transferDate').focus();
+        });
+
+        $('#transferModal').on('hidden.bs.modal', function() {
+            resetTransferForm();
+        });
+    }
+
+    function BindPremises() {
+        let URL = `/ProductionMachine/GetCompCode`;
+        BindDropdown(URL, 'ddlPremises', authToken, 'CompCode', 'N_CompCode', 'Premises');
+        BindDropdown(URL, 'transferPremises', authToken, 'CompCode', 'N_CompCode', 'Target Premises');
+    }
+
+    function BindDropdown(url, dropdownId, token, valueField, textField, placeholder) {
+        fetch(url, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const dropdown = $(`#${dropdownId}`);
+            dropdown.empty();
+            dropdown.append(`<option value="">Choose ${placeholder.toLowerCase()}...</option>`);
+
+            data.forEach(item => {
+                dropdown.append(`<option value="${item[valueField]}">${item[textField]}</option>`);
+            });
+        })
+        .catch(error => {
+            console.error('Error loading dropdown data:', error);
+            showAlert('Error loading premises data', 'error');
+        });
+    }
+
+    async function loadMachineData(compCode) {
+        try {
+            showLoading(true);
+            resetTable();
+            const requestBody = {
+                CompCode: compCode
+            };
+
+            const response = await fetch('/ProductionMachine/TransferMachineList', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authToken}`
+                },
+                body: JSON.stringify(requestBody)
+            });
+
+            if (!response.ok) {
+                if (response.status === 404) {
+                    showAlert('No data found for selected premises', 'info');
+                    showEmptyState(true);
+                    showLoading(false);
+                    return;
+                }
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const responseText = await response.text();
+            let machines = [];
+
+            try {
+                const outerData = JSON.parse(responseText);
+                if (typeof outerData === 'string') {
+                    machines = JSON.parse(outerData);
+                } else if (Array.isArray(outerData)) {
+                    machines = outerData;
+                } else {
+                    machines = [outerData];
+                }
+            } catch (parseError) {
+                console.error('JSON Parse Error:', parseError);
+                console.error('Response Text was:', responseText);
+                try {
+                    machines = JSON.parse(responseText);
+                    if (!Array.isArray(machines)) {
+                        machines = [machines];
+                    }
+                } catch (secondParseError) {
+                    console.error('Second parse attempt failed:', secondParseError);
+                    throw new Error('Unable to parse response data. Please check the API response format.');
+                }
+            }
+
+            if (!machines || machines.length === 0) { 
+                showEmptyState(true);
+            } else {
+                console.log(`Found ${machines.length} machines, populating table...`);
+                populateTable(machines);
+            }
+
+            showLoading(false);
+
+        } catch (error) {
+            console.error('Error loading machine data:', error);
+            showLoading(false);
+            showAlert('Error loading machine data: ' + error.message, 'error');
+            showEmptyState(true);
+        }
+    }
+
+    function populateTable(machines) { 
+        const tbody = $('#machineTableBody');
+        tbody.empty();
+
+        if (!machines || machines.length === 0) {
+            console.log('No machines data, showing empty state');
+            showEmptyState(true);
+            return;
+        }
+         
+        machines.forEach((machine, index) => { 
+            const statusBadge = machine.Status === 'Active'
+                ? '<span class="status-badge status-active">Active</span>'
+                : '<span class="status-badge status-inactive">Inactive</span>';
+            const machineJson = JSON.stringify(machine).replace(/'/g, "&#39;").replace(/"/g, "&quot;");
+            const lineId = machine['Line ID'] || machine.LineId || '';
+
+            const row = `
+                <tr data-machine-id="${machine.id || ''}" data-machine-code="${machine.MachineCode || ''}">
+                    <td>
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox" class="custom-checkbox machine-checkbox"
+                                   value="${machine.id || ''}" data-machine='${machineJson}'>
+                        </div>
+                    </td>
+                    <td>${machine.Machine_Type || ''}</td>
+                    <td>${machine.ModelNo || ''}</td>
+                    <td>${machine.Make || ''}</td>
+                    <td>${machine.MachineSrNo || ''}</td>
+                    <td><span class="badge bg-secondary">${machine.MachineCode || ''}</span></td>
+                    <td>${lineId}</td>
+                    <td>${statusBadge}</td>
+                    <td>${machine['Registered By'] || machine.RegisteredBy || ''}</td>
+                    <td>${machine.Date ? formatDate(machine.Date) : ''}</td>
+                </tr>
+            `;
+            tbody.append(row);
+        });
+
+        $('#machineTable').show();
+        $('#selectAllContainer').show();
+        $('#emptyState').hide();
+        if (dataTable) {
+            dataTable.destroy();
+        }
+
+        dataTable = $('#machineTable').DataTable({
+            responsive: true,
+            pageLength: 25,
+            searching: false,
+            scrollY:"440px",
+            paging: false,
+            order: [[1, 'asc']],
+            columnDefs: [
+                { orderable: false, targets: 0 }
+            ],
+            language: {
+                search: "Search machines:",
+                lengthMenu: "Show _MENU_ machines per page",
+                info: "Showing _START_ to _END_ of _TOTAL_ machines",
+                emptyTable: "No machines found"
+            }
+        });
+    }
+
+    function updateSelectedMachines() {
+        selectedMachines = [];
+        $('.machine-checkbox:checked').each(function() {
+            try {
+                const machineDataAttr = $(this).attr('data-machine');
+                const machineData = JSON.parse(machineDataAttr.replace(/&quot;/g, '"').replace(/&#39;/g, "'"));
+                selectedMachines.push(machineData);
+            } catch (e) {
+                console.error('Error parsing machine data:', e);
+            }
+        });
+        $('#selectedCount').text(`${selectedMachines.length} selected`);
+    }
+
+    function updateSelectAllState() {
+        const totalCheckboxes = $('.machine-checkbox').length;
+        const checkedCheckboxes = $('.machine-checkbox:checked').length;
+        $('#selectAllCheckbox, #headerCheckbox').prop({
+            'checked': checkedCheckboxes === totalCheckboxes && totalCheckboxes > 0,
+            'indeterminate': checkedCheckboxes > 0 && checkedCheckboxes < totalCheckboxes
+        });
+    }
+
+    function updateActionButtons() {
+        const hasSelection = selectedMachines.length > 0;
+        $('#btnTransfer').prop('disabled', !hasSelection);
+    }
+
+    function openTransferModal() {
+        $('#transferCount').text(selectedMachines.length);
+        populateSelectedMachinesSummary();
+        $('#transferModal').modal('show');
+    }
+
+    function populateSelectedMachinesSummary() {
+        const summaryContainer = $('#selectedMachinesSummary');
+        summaryContainer.empty();
+
+        if (selectedMachines.length === 0) {
+            summaryContainer.html('<p class="text-muted mb-0">No machines selected</p>');
+            return;
+        }
+
+        selectedMachines.forEach(machine => {
+            const summaryItem = `
+                <div class="machine-summary-item">
+                    <div class="machine-info">
+                        <div class="fw-semibold">${machine.Machine_Type || 'N/A'} - ${machine.Make || 'N/A'}</div>
+                        <small class="text-muted">Model: ${machine.ModelNo || 'N/A'} | Serial: ${machine.MachineSrNo || 'N/A'}</small>
+                    </div>
+                    <span class="badge bg-secondary machine-code-badge">${machine.MachineCode || 'N/A'}</span>
+                </div>
+            `;
+            summaryContainer.append(summaryItem);
+        });
+    }
+     
+    function performTransfer() {
+        const transferDate = $('#transferDate').val();
+        const transferPremises = $('#transferPremises').val();
+
+        if (!transferDate) {
+            showAlert('Please select a transfer date!', 'warning');
+            $('#transferDate').addClass('is-invalid');
+            return;
+        }
+
+        if (!transferPremises) {
+            showAlert('Please select target premises!', 'warning');
+            $('#transferPremises').addClass('is-invalid');
+            return;
+        }
+
+        $('#transferDate, #transferPremises').removeClass('is-invalid');
+
+        let selectedMachines = [];
+        $('.machine-checkbox:checked').each(function () {
+            let val = $(this).val();
+            if (val && val !== "0") {
+                selectedMachines.push(val);  
+            }
+        });
+
+        if (selectedMachines.length === 0) {
+            showAlert('Please select at least one machine!', 'warning');
+            return;
+        }
+
+        const transferData = {
+            Code: selectedMachines,
+            transferDate: transferDate,
+            TargetPremises: transferPremises,
+            UserName: UserName              
+        };
+
+        $.ajax({
+            url: '/ProductionMachine/TransferMachine',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(transferData),
+            success: function(response) {
+                fireSweetAlert(`${selectedMachines.length} machine(s) transferred successfully!`, 'success');
+                $('#transferModal').modal('hide');
+                resetSelection();
+
+                const selectedPremises = $('#ddlPremises').val();
+                if (selectedPremises) {
+                    loadMachineData(selectedPremises);
+                }
+            },
+            error: function(xhr) {
+                let errMsg = 'An error occurred while transferring machines.';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errMsg = xhr.responseJSON.message;
+                }
+                fireSweetAlert(errMsg, 'danger');
+            }
+        });
+    }
+
+    function resetTransferForm() {
+        $('#transferDate').val(new Date().toISOString().split('T')[0]);
+        $('#transferPremises').val('');
+        $('#transferNotes').val('');
+        $('#transferDate, #transferPremises').removeClass('is-invalid');
+    }
+
+    function resetSelection() {
+        $('.machine-checkbox, #selectAllCheckbox, #headerCheckbox').prop('checked', false);
+        selectedMachines = [];
+        updateActionButtons();
+        $('#selectedCount').text('0 selected');
+    }
+
+    function resetTable() {
+        $('#machineTable').hide();
+        $('#selectAllContainer').hide();
+        $('#emptyState').hide();
+        if (dataTable) {
+            dataTable.destroy();
+            dataTable = null;
+        }
+        $('#machineTableBody').empty();
+        resetSelection();
+    }
+
+    function showLoading(show) {
+        if (show) {
+            $('#loadingSpinner').show();
+            $('#machineTable').hide();
+            $('#selectAllContainer').hide();
+            $('#emptyState').hide();
+        } else {
+            $('#loadingSpinner').hide();
+        }
+    }
+
+    function showEmptyState(show) {
+        if (show) {
+            $('#emptyState').show();
+            $('#machineTable').hide();
+            $('#selectAllContainer').hide();
+        } else {
+            $('#emptyState').hide();
+        }
+    }
+
+    function formatDate(dateString) {
+        if (!dateString) return 'N/A';
+        try {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        } catch (e) {
+            return dateString;
+        }
+    }
+
+    function showAlert(message, icon) {
+        Swal.fire({
+            text: message,
+            icon: icon,
+            timer: 3000,
+            showConfirmButton: false,
+            toast: true,
+            position: 'top-end'
+        });
+    }
+
+    function Alerts(Text, Icon) {
+        showAlert(Text, Icon);
+    }
+
+    function fireSweetAlert(message, icon) {
+        return Swal.fire({
+            text: message,
+            icon: icon,
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel'
+        });
+    }
+</script>

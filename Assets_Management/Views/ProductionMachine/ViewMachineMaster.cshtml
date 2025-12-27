@@ -1,0 +1,515 @@
+﻿@{
+    ViewData["Title"] = "ViewMachineMaster";
+    Layout = "~/Views/Shared/ItLayout.cshtml";
+}
+<link href="~/css/summrycss.css" rel="stylesheet" />
+<link href="~/css/MachineMasterCss.css" rel="stylesheet" />
+<script src="~/ExcelReader/ExcelReader.js"></script>
+
+<div>
+    <div class="container-fluid">
+        <div class="overflow-hidden element mt-2" style="z-index:1;">
+            <div class="ps-0">
+                <div class="control-section">
+                    <div class="header-section mb-3">
+                        <div class="header-left">
+                            <h4 class="header-title fw-bold">Machine Master</h4>
+                        </div>
+                        <div class="controls-group">
+                            <div class="dropdown-wrapper">
+                                <select class="form-select form-select-custom" id="ddlPremises"></select>
+                            </div>
+
+                            <div class="btn-group-custom">
+                                <button type="button" id="BtnDetail" class="btn btn-warning btn-custom text-dark" onclick="window.location.href='@Url.Action("MachineMaster", "ProductionMachine")'">
+                                    <i class="fa-solid fa-plus"></i>
+                                    <span>Add Machine</span>
+                                </button>
+                                <button type="button" class="btn btn-success btn-custom text-white" data-bs-toggle="modal" data-bs-target="#UploadModal">
+                                    <i class="fas fa-cloud-upload"></i>
+                                    <span>Upload File</span>
+                                </button>
+                                <button type="button" id="btnDownload" class="btn btn-primary btn-custom text-white">
+                                    <i class="fa-solid fa-download"></i>
+                                    <span>Download</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="tblDetailContainer" class="mt-3">
+                </div>
+            </div>
+            <div class="modal fade" id="UploadModal" tabindex="-1" aria-hidden="true" aria-labelledby="UploadModal">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalCenterLabel">Upload File</h5>
+                            <button type="button" id="BtnClose" class="btn btn-danger rounded  " data-bs-dismiss="modal" aria-label="Close">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <hr />
+                        <ul class="nav mt-2 nav-tabs" id="myTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link active" id="uploadTab" data-bs-toggle="tab" href="#upload" role="tab" aria-controls="upload" aria-selected="true">Upload Machine List</a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link" id="updateTab" data-bs-toggle="tab" href="#update" role="tab" aria-controls="update" aria-selected="false">Update Line</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content" id="myTabContent">
+                            <div class="tab-pane fade show active" id="upload" role="tabpanel" aria-labelledby="uploadTab">
+                                <div class="modal-body pb-1 col-sm-12 row">
+                                    <div class="col-sm-6">
+                                        <select class="form-control" id="ddlMdlPremisesMachine">
+                                            <option>Select Premises</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="file" class="form-control" id="UploadData">
+                                    </div>
+                                    <div class="mt-2 d-flex justify-content-end">
+                                        <button type="button" class="btn text-white" onclick="GetExcelData('UploadData','','#ddlMdlPremisesMachine option:selected')" style="background-color: #12A1D1;">Upload</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="update" role="tabpanel" aria-labelledby="updateTab">
+                                <div class="modal-body pb-1 col-sm-12 row">
+                                    <div class="col-sm-6">
+                                        <select class="form-control" id="ddlMdlPremisesLine">
+                                            <option>Select Premises</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="file" class="form-control" id="fileUpdateLine">
+                                    </div>
+                                    <div class="d-flex justify-content-end mt-2">
+                                        <button type="button" class="btn text-white" onclick="GetExcelData('fileUpdateLine','Update','#ddlMdlPremisesLine option:selected')" style="background-color: #12A1D1;">Upload</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="text-left mb-2">
+                            <a href="/ProductionMachine/DownloadExcel" class="btn text-white btn-success mx-4">
+                                Excel <i class="fa-solid fa-download"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    let authToken = localStorage.getItem("authToken");
+    let $btnDownload = $('#btnDownload')
+    let $ddlPremises = $('#ddlPremises')
+    let UserName = sessionStorage.getItem('UserName')
+
+    $(document).ready(function(){
+        BindPremises();
+        GetPremises();
+        BindtableData();
+        $('#UploadModal').on('shown.bs.modal', function () {
+            if (!$('#ddlMdlPremisesMachine').hasClass('select2-hidden-accessible')) {
+                $('#ddlMdlPremisesMachine').select2({
+                    dropdownParent: $('#UploadModal')
+                });
+            }
+            if (!$('#ddlMdlPremisesLine').hasClass('select2-hidden-accessible')) {
+                $('#ddlMdlPremisesLine').select2({
+                    dropdownParent: $('#UploadModal')
+                });
+            }
+        });
+        $('#UploadModal').on('hidden.bs.modal', function () {
+            $('#ddlMdlPremisesMachine').select2('destroy');
+            $('#ddlMdlPremisesLine').select2('destroy');
+        });
+    });
+
+    function initializeSelect2InModal() {
+        if ($('#ddlMdlPremisesMachine').hasClass('select2-hidden-accessible')) {
+            $('#ddlMdlPremisesMachine').select2('destroy');
+        }
+        if ($('#ddlMdlPremisesLine').hasClass('select2-hidden-accessible')) {
+            $('#ddlMdlPremisesLine').select2('destroy');
+        }
+        $('#ddlMdlPremisesMachine').select2({
+            dropdownParent: $('#UploadModal'),
+            placeholder: "Select Premises",
+            allowClear: true
+        });
+        $('#ddlMdlPremisesLine').select2({
+            dropdownParent: $('#UploadModal'),
+            placeholder: "Select Premises",
+            allowClear: true
+        });
+    }
+
+    function BindPremises() {
+        let URL = `/ProductionMachine/GetPremises`;
+        BindDropdown(URL, 'ddlPremises', authToken, 'CompCode', 'N_CompCode', 'Premises');
+    }
+
+    function BindtableData() {
+        let Premises = $('#ddlPremises option:selected').val();
+        if (Premises === "Select Premise") {
+            Premises = null;
+        }
+        let Data = (Premises && Premises !== "0") ? "GetPremisesFilterdata" : "GetMachineData";
+        const Payload = {
+            Data: Data,
+            Premises: Premises || "",
+            Search: "",
+            PageNumber: "1"
+        };
+        $('#tblDetailContainer').html(`
+            <div class="d-flex justify-content-center align-content-center">
+                <div class="text-center py-5">
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <div class="ms-3 fs-5 text-muted">Please wait, loading data...</div>
+                    </div>
+                </div>
+            </div>
+        `);
+        $.ajax({
+            url: `/ProductionMachine/GetMachineMasterList`,
+            type: "POST",
+            dataType: "json",
+            data: JSON.stringify(Payload),
+            contentType: 'application/json',
+            success: function(data) {
+                let Html = `
+                    <table class="table table-bordered table-striped custom-table datatable w-100">
+                        <thead class="bg-light">
+                            <tr>
+                                <th style="text-align: center;">Sr No</th>
+                                <th style="text-align: center;">Premises</th>
+                                <th style="text-align: center;">Machine Type</th>
+                                <th style="text-align: center;">Model No</th>
+                                <th style="text-align: center;">Make</th>
+                                <th style="text-align: center;">Machine SrNo</th>
+                                <th style="text-align: center;">Machine Code</th>
+                                <th style="text-align: center;">Line</th>
+                                <th style="text-align: center;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="font_SIZE">
+                `;
+                if (data && data.length > 0) {
+                    $.each(data, function(i, v) {
+                        Html += `
+                            <tr>
+                                <td style="text-align: center;">${i + 1}</td>
+                                <td style="text-align: center;">${v.N_CompCode || ''}</td>
+                                <td style="text-align: center;">${v.Machine_Type || ''}</td>
+                                <td style="text-align: center;">${v.ModelNo || ''}</td>
+                                <td style="text-align: center;">${v.Make || ''}</td>
+                                <td style="text-align: center;">${v.MachineSrNo || ''}</td>
+                                <td style="text-align: center;">${v.MachineCode || ''}</td>
+                                <td style="text-align: center;">${v.lineNo || ''}</td>
+                                <td style="text-align: center; font-size:25px">
+                                    <a href="/ProductionMachine/MachineMaster?ID=${v.id}">
+                                        <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    Html += `
+                        <tr>
+                            <td colspan="9" class="text-center text-muted">No data available</td>
+                        </tr>
+                    `;
+                }
+                Html += `</tbody></table>`;
+                $('#tblDetailContainer').html(Html);
+                $('.custom-table').DataTable({
+                    //paging: true,
+                    searching: true,
+                    ordering: false,
+                    info: true,
+                    fixedHeader: true,
+                    pageLength: 10,
+                    scrollY: "565px",
+                    scrollCollapse: true,
+                    destroy: true,
+                    layout: {
+                            bottomEnd: {
+                                paging: {
+                                    firstLast: false
+                                }
+                            }
+                        }
+                });
+            },
+            error: function(err) {
+                const Html = `
+                    <table class="table table-bordered table-striped custom-table datatable w-100">
+                        <thead class="bg-light">
+                            <tr>
+                                <th style="text-align: right;">Sr No</th>
+                                <th style="text-align: left;">Premises</th>
+                                <th style="text-align: left;">Machine Type</th>
+                                <th style="text-align: left;">Model No</th>
+                                <th style="text-align: left;">Make</th>
+                                <th style="text-align: left;">Machine SrNo</th>
+                                <th style="text-align: left;">Machine Code</th>
+                                <th style="text-align: left;">Line</th>
+                                <th style="text-align: center;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="font_SIZE">
+                            <tr>
+                                <td colspan="9" class="text-center text-danger">Failed to load data. Please try again later.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `;
+                $('#tblDetailContainer').html(Html);
+                console.error("Error fetching machine data:", err);
+            }
+        });
+    }
+
+    async function GetPremises() {
+        let url = `/ProductionMachine/GetPremises`;
+        $('#ddlpremises').find('option').remove();
+        try {
+            let response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            let result = await response.json();
+            result.forEach((item) => {
+                $('#ddlMdlPremisesLine').append($("<option></option>").attr("value", item.compCode).text(item.N_CompCode));
+                $('#ddlMdlPremisesMachine').append($("<option></option>").attr("value", item.compCode).text(item.N_CompCode));
+            });
+            $('#ddlMdlPremisesMachine').select2({
+                dropdownParent: $('#UploadModal')
+            });
+            $('#ddlMdlPremisesLine').select2({
+                dropdownParent: $('#UploadModal')
+            });
+            return result;
+        }
+        catch (error) {
+            console.error('Unexpected error occurred', error)
+        }
+    }
+
+    $btnDownload.on('click', function() {
+       let CompCode = $('#ddlPremises option:selected').val();
+       $.ajax({
+           url: `/ProductionMachine/downloadExcelData`,
+           data: JSON.stringify({ Premises: CompCode }),
+           dataType: "json",
+           type: "POST",
+           contentType: 'application/json',
+           success: function(res) {
+               let Data = res;
+               var ws = XLSX.utils.json_to_sheet(Data);
+               var wb = XLSX.utils.book_new();
+               XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
+               XLSX.writeFile(wb, "MachineData.xlsx");
+           },
+           error:function(xhr,status,error)
+           {
+               var errorMessage = "An error occurred while processing the request";
+               if (xhr.responseJSON && xhr.responseJSON.message) {
+                   errorMessage = xhr.responseJSON.message;
+               } else if (xhr.responseText) {
+                   errorMessage = xhr.responseText;
+               }
+               alert("Error: " + errorMessage);
+           }
+       });
+    });
+
+    $ddlPremises.on('change',function()
+    {
+        BindtableData();
+    })
+
+    function GetExcelData(ID, Status, Premises) {
+        debugger
+        var file = document.getElementById(ID).files[0];
+        if (file != null) {
+            var fileName = file.name.toLowerCase();
+            if (!fileName.endsWith('.xlsx') && !fileName.endsWith('.xls')) {
+                Alerts('Please select a valid Excel file (.xlsx or .xls)',"error");
+                return;
+            }
+            if (file.size > 5 * 1024 * 1024) {
+                Alerts('File size should not exceed 5MB',"error");
+                return;
+            }
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                try {
+                    var data = new Uint8Array(e.target.result);
+                    var workbook = XLSX.read(data, { type: 'array' });
+                    var sheet = workbook.Sheets[workbook.SheetNames[0]];
+                    var jsonData = XLSX.utils.sheet_to_json(sheet);
+                    if (jsonData.length === 0) {
+                        Alerts('Excel file is empty or has no data','error');
+                        return;
+                    }
+                    ManageExcelData(jsonData, Status, Premises);
+                } catch (error) {
+                    Alerts(`Error reading Excel file:${error.message}`,'error');
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+        else {
+            Alerts("Please Select File",'error');
+        }
+    }
+
+    function ManageExcelData(jsonData, Status, Premises) {
+        debugger
+        var PremisesCode = $(Premises).val();
+        if (!PremisesCode || PremisesCode === 'Select Premises') {
+            Alerts('Please select a premises','error');
+            return;
+        }
+        var excelDataList = [];
+        var hasErrors = false;
+        var errorMessages = [];
+        $.each(jsonData, function (i, v) {
+            var row = {};
+            if (!v["Machine Type"]) {
+                errorMessages.push(`Row ${i + 1}: Machine Type is required`);
+                hasErrors = true;
+            }
+            if (!v["Model No."]) {
+                errorMessages.push(`Row ${i + 1}: Model No. is required`);
+                hasErrors = true;
+            }
+            if (!v["Make"]) {
+                errorMessages.push(`Row ${i + 1}: Make is required`);
+                hasErrors = true;
+            }
+            if (!v["Machine Sr. No."]) {
+                errorMessages.push(`Row ${i + 1}: Machine Sr. No. is required`);
+                hasErrors = true;
+            }
+            row["MachineType"] = v["Machine Type"]
+            row["ModelNo"] = v["Model No."]
+            row["Make"] = v["Make"]
+            row["MachineSrNo"] = v["Machine Sr. No."]
+            row["LineID"] = v["Line No"]
+            row["CompCode"] = PremisesCode;
+            excelDataList.push(row);
+        });
+        if (hasErrors) {
+           Alerts(`Validation Errors:\n${errorMessages.join('\n')}`,'error');
+           return;
+        }
+        let url = `/ProductionMachine/ManageExcelData?status=${Status}&username=${UserName}`
+        console.log(url)
+        $.ajax({
+            url: url,
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(excelDataList),
+            success: function (response) {
+                Swal.fire(`${response.message}`);
+            },
+
+            error: function (xhr, status, error) {
+                var errorMessage = "An error occurred while processing the request";
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
+                } else if (xhr.responseText) {
+                    errorMessage = xhr.responseText;
+                }
+                alert("Error: " + errorMessage);
+            }
+        });
+    }
+
+    function fireSweetAlert(message, icon) {
+        return Swal.fire({
+            text: message,
+            icon: icon,
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'Cancel'
+        });
+    }
+
+    function Alerts(Text,Icon)
+    {
+       Swal.fire({
+         text: `${Text}`,
+         icon: `${Icon}`
+       });
+    }
+
+
+    function SetPageing(currentPage, PagesCount) {
+        const paginationContainer = document.getElementById('pagination');
+        paginationContainer.innerHTML = '';
+        if (PagesCount > 10) {
+            if (currentPage > 1) {
+                paginationContainer.innerHTML += `
+            <li class="page-item">
+                <a style="background-color:#12A1D1" class="page-link text-white"  onclick="GetMachineData('GetMachineData',1,'');" aria-label="First">
+                    <span aria-hidden="true">First</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a style="background-color:#12A1D1" class="page-link text-white"  onclick="GetMachineData('GetMachineData',${currentPage - 1},'');" aria-label="Previous">
+                    <span aria-hidden="true">Previous</span>
+                </a>
+            </li>`;
+            }
+            var Tonumber = totalPages > 5 ? (parseInt(currentPage) + 2) : totalPages;
+            var StartIndex = currentPage - 2 < 1 ? 1 : currentPage - 2;
+            console.log(StartIndex, Tonumber);
+            for (let i = StartIndex; i <= Tonumber; i++) {
+                // if (i >= (currentPage - 2) && i <= (currentPage + 2)) {
+                paginationContainer.innerHTML += `
+                <li style="min-width:40px;" class="page-item ${i === currentPage ? 'active' : ''}">
+                    <a class="page-link "  onclick="GetMachineData('GetMachineData',${i},'');">${i}</a>
+                </li>`;
+                //  }
+            }
+            if (currentPage < totalPages) {
+                paginationContainer.innerHTML += `
+            <li class="page-item text-white">
+                <a style="background-color:#12A1D1" class="page-link text-white"    onclick="GetMachineData('GetMachineData',${currentPage + 1},'');" aria-label="Next">
+                    <span aria-hidden="true">Next</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a style="background-color:#12A1D1" class="page-link text-white"   onclick="GetMachineData('GetMachineData',${totalPages},'');" aria-label="Last">
+                    <span aria-hidden="true">Last</span>
+                </a>
+            </li>`;
+            }
+        }
+        else {
+            for (let i = 1; i <= PagesCount; i++) {
+                paginationContainer.innerHTML += `
+                <li style="min-width:40px;" class="page-item ${i === currentPage ? 'active' : ''}">
+                    <a class="page-link "  onclick="GetMachineData('GetMachineData',${i},'');">${i}</a>
+                </li>`;
+            }
+        }
+
+    }
+
+</script>
+
