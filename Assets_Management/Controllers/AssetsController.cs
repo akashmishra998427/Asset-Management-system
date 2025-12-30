@@ -675,6 +675,83 @@ namespace Assets_Management.Controllers
                 return StatusCode(404, new { success = false, message = "No Asset found" });
             }
         }
+
+         #region Upload Receiving start
+
+ public IActionResult UploadReceiving()
+ {
+     return View();
+ }
+
+ [HttpPost]
+ public async Task<IActionResult> UploadReceiving([FromForm] string AssetCode, [FromForm] IFormFile Images, [FromForm] string Category)
+ {
+     if (string.IsNullOrEmpty(AssetCode))
+     {
+         return BadRequest("To Save Receiving Asset Code Is Required");
+     }
+
+     if (Images == null || Images.Length == 0)
+     {
+         return BadRequest("Please Upload The Receiving Image");
+     }
+
+     var uploadLocation = Path.Combine(_env.WebRootPath, "GIMS_AttachedDocument", "Assets", Category, AssetCode.Replace("/", "-"));
+
+     if (!Directory.Exists(uploadLocation))
+     {
+         Directory.CreateDirectory(uploadLocation);
+     }
+
+     var fileExtension = Path.GetExtension(Images.FileName);
+
+     int nextFileNumber = Directory.GetFiles(uploadLocation).Length + 1;
+
+     var finalFileName = $"{nextFileNumber}{fileExtension}";
+     var filePath = Path.Combine(uploadLocation, finalFileName);
+
+     using (var stream = new FileStream(filePath, FileMode.Create))
+     {
+         await Images.CopyToAsync(stream);
+     }
+
+     return Ok(new { Message = "Image uploaded successfully", Url = filePath, AssetCode = AssetCode });
+ }
+
+ [HttpGet]
+ public IActionResult GetUploadedReceivingImage(string AssetCode, string Category)
+ {
+     if (string.IsNullOrWhiteSpace(AssetCode))
+     {
+         return BadRequest(new { success = false, message = "AssetCode is required" });
+     }
+
+     var folderPath = Path.Combine(_env.WebRootPath, "GIMS_AttachedDocument", "Assets", Category, AssetCode.Replace("/", "-"));
+
+     if (!Directory.Exists(folderPath))
+     {
+         return Ok(new { success = true, data = new List<object>() });
+     }
+
+     var files = Directory.GetFiles(folderPath)
+         .Select((file, index) =>
+         {
+             var fileName = Path.GetFileName(file);
+             return new
+             {
+                 id = index + 1,
+                 imageName = fileName,
+                 imageUrl = $"{Request.Scheme}://{Request.Host}/GIMS_AttachedDocument/Assets/{Category}/{AssetCode.Replace("/", "-")}/{fileName}",
+                 uploadDate = System.IO.File.GetCreationTime(file),
+                 category = Category
+             };
+         }).ToList();
+
+     return Ok(new { success = true, data = files });
+ }
+
+ #endregion Upload Receiving End
+        
     }
 }
 
